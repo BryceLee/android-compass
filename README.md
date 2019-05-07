@@ -1,5 +1,5 @@
-# BryceAndroidHelper
-Android Helper about Architecture,Third Libs ,Utils and Some Solutions to Dev.
+# android-compass
+android-compass is a dev manual about Android Architecture,Third Libs ,Utils and Some Solutions to dev.
 ## Architecture
 - MVP
 - MVVM
@@ -18,6 +18,7 @@ Android Helper about Architecture,Third Libs ,Utils and Some Solutions to Dev.
     - [Buyly Summary](https://www.jianshu.com/p/168feeea2363)
 
 ## Bult-in Test
+You can upload your apk ,and you get a qrcode that someone can scan and download apk for test it.I think Pgyer is better because it can keep more valid apk history.
 - [Pgyer](https://www.pgyer.com/)
 - [Fir](https://fir.im/)
 
