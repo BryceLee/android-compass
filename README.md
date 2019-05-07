@@ -7,6 +7,8 @@ Android Helper about Architecture,Third Libs ,Utils and Some Solutions to Dev.
 
 ## Image Loader 
 - Fresco
+    - Fresco Architecture Learning：
+        - https://juejin.im/post/5c7753a86fb9a049d61e37dd
 - Glide
 - Piccaso
 - Universal-image-loader
