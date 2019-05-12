@@ -1,5 +1,6 @@
 # android-compass
 android-compass is a dev manual about Android Architecture,Third Libs ,Utils and Some Solutions to dev.
+# [README OF ENGLISH](https://github.com/BryceLee/android-compass/blob/master/README_EN.md)
 ## The Basis of Computer
 - [Algorithms][Algorithms]
 
