@@ -9,6 +9,10 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - Kotlin
 - C
 - C++
+## View
+- Textview
+        - [FontFamily](https://blog.csdn.net/yuanxw44/article/details/80019501)
+
 ## Architecture
 - MVP
 - MVVM
