@@ -44,7 +44,7 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - MVP
 - MVVM
 - Dagger2
-     - [Dagger2源码分析](https://github.com/BryceLee/android-compass/blob/master/FramesSourceAnalysis)
+     - [Dagger2源码分析](https://github.com/BryceLee/android-compass/blob/master/FramesSourceAnalysis/Dagger2SourceAnalysis.md)
 ## JetPack
 - Paging
     - [office document](https://developer.android.google.cn/topic/libraries/architecture/paging/#java)
