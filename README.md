@@ -2,7 +2,7 @@
 android-compass is a dev manual about Android Architecture,Third Libs ,Utils and Some Solutions to dev.
 # [README OF ENGLISH](https://github.com/BryceLee/android-compass/blob/master/README_EN.md)
 ## The Basis of Computer
-- [Algorithms][Algorithms]
+- 算法和数据结构 [Algorithms]
 
 ## 设计思想
 - 什么是控制反转？
@@ -36,11 +36,36 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 
 ## Language
 - Java
-    - 
 - Rxjava
 - Kotlin
 - C
 - C++
+## Activity Launchmode
+- standard
+    - 每次都创建
+- singleTop
+    - 事例在栈顶，就复用，否则重新创建。
+    ```
+    singleTop生效时，所走的生命周期如下：
+    2019-05-13 22:55:36.245 32679-32679/com.android.lanuchmode D/Tag:: onPause class com.android.lanuchmode.AActivity
+    2019-05-13 22:55:36.245 32679-32679/com.android.lanuchmode D/Tag:: onNewIntent class com.android.lanuchmode.AActivity
+    2019-05-13 22:55:36.247 32679-32679/com.android.lanuchmode D/Tag:: onResume class com.android.lanuchmode.AActivity
+    ```
+- singleTask
+    - 栈内存在实例就复用，但是会清空在事例之上的所有其他实例；不存在就创建
+    - 不存在所属任务栈，先创建任务栈再创建事例，并且入栈
+- singleInstance
+    - 只能独立的存在一个任务栈 
+## View
+- View位置坐标由以ViewGroup的左上角为顶点的坐标系来决定的，向右是x轴正方形，向下是y轴
+正方向；
+- View的触摸事件
+    - MotionEvent
+    - TouchSlop，被系统认为是最小的滑动距离，滑动距离必须大于等于这个值才会被系统认为是滑动事件。
+- 动画
+- 事件传递
+- [ConstraintLayout](https://mp.weixin.qq.com/s/JijR16p-DjlsZz8wn5D-PQ)(放一篇总结的很不错的文章)
+
 ## Architecture
 - MVP
 - MVVM
