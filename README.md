@@ -243,6 +243,6 @@ You can upload your apk ,and you get a qrcode that someone can scan and download
 
 [Algorithms]:https://github.com/BryceLee/algorithms-learning
 [C_Primary]:https://github.com/BryceLee/algorithms-learning
-[databinding]:https://github.com/BryceLee/android-compass/blob/master/jatpack/databinding.md
+[databinding]:https://github.com/BryceLee/android-compass/blob/master/jetpack/databinding.md
 ## Thanks:
 - 《Android开发艺术探索》
