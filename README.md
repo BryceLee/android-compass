@@ -36,9 +36,11 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 
 ## Language
 - Java
+    - [内存模型](https://blog.csdn.net/javazejian/article/details/72772461#comments)
 - Rxjava
 - Kotlin
 - C
+    - C入门记录
 - C++
 ## Activity Launchmode
 - standard
@@ -62,9 +64,60 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - View的触摸事件
     - MotionEvent
     - TouchSlop，被系统认为是最小的滑动距离，滑动距离必须大于等于这个值才会被系统认为是滑动事件。
-- 动画
+### Android动画
+- View Animation：作用在View对象上，
+  - tween Animation:写出开始和结束状态，系统会补充中间过程。有translate,scale,rotate,alpha四种效果动画。
+  - frame Animation：自定义动画的每一帧。
+- Property Animation：可以不作用在View对象上（ValueAnimation），也可以作用在对象上(objectAnimation)，具有更高的可扩展性。是在API 11时提供等。
+  - ValueAnimation
+  - ObjectAnimation
+
+  - 可以监听动画效果，也可以使用插值器来控制动画速度。
+  - ![image](https://user-gold-cdn.xitu.io/2019/2/22/169158b7461a93ba?w=1140&h=270&f=png&s=75625)
+  
+- Thanks:
+    - [Android动画总结](https://blog.csdn.net/carson_ho/article/details/79860980)
+    - [interpolator&TypeEvaluator](https://blog.csdn.net/carson_ho/article/details/72863901)
 - 事件传递
 - [ConstraintLayout](https://mp.weixin.qq.com/s/JijR16p-DjlsZz8wn5D-PQ)(放一篇总结的很不错的文章)
+## Android消息机制
+- Handler
+    - 原理:ThreadLocal可以在每个线程中存储数据并且获取数据，要使用Handler，线程必须拥有Looper，当前一开始时没有Looper的，Looper被创建存储在ThreadLocal中。 消息被存储在MessageQueue这个单链表中，Looper无限的从队列中取消息来处理。ActivityThread就是UI线程，ActivityThread被创建的时候就初始化了Looper，这是UI线程默认可以使用Handler的原因。
+
+## Executor(Interface),ThreadPoolExecutor(Impl)
+- 构造参数说明：
+    - coolPoolsize
+        - 默认情况下一直活着，除非设置ThreadPoolExecutor的allowCoreThreadTimeout=true,核心线程闲置超时也会被终止
+    - maxinumPoolsize
+        - 最大线程数，新任务超过最大值就要等待
+    - keepAliveTime
+        - 线程闲置保活时间
+    - unit
+        - keepAliveTime的单位
+    - workQueue:任务队列，存储runnable对象
+    - ThreadFactory  
+        - 创建线程
+- 参考AsyncTask参数配置：
+    - coolposize=cpucount+1
+    - maximumpoolsize=cpucount*2+1
+    - 核心线程无超市机制，非核心线程超时事件1秒
+    - 任务队列容量128
+- 分类
+    - FixedThreadPool
+        - Executors.newFixedThreadPool()
+            - 固定核心线程，全是核心线程，无超时机制，无任务队列上线 
+            - 适合需要快速响应的任务
+        - Executors.newCachedThreadPool()
+            - 全是非核心线程，最大线程数Interget.Max_Value,60秒超时机制
+            - 无法存储任务，有新任务立即执行
+            - 适合执行大量耗时较少的任务（Retrofit?Rxjava?）
+        - Executors.newScheduledThreadPool()
+            - 核心线程固定，最大线程Inter.Max_Value
+            - 超时事件为0，非核心线程闲置会被立即回收
+            - 适合定时任务，具有周期性的任务
+        - Executor.SingleThreadExecutor()
+            - 只有一个核心线程
+            - 单线程的任务
 
 ## Architecture
 - MVP
@@ -76,6 +129,7 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - [office document](https://developer.android.google.cn/topic/libraries/architecture/paging/#java)
     - [Introduce to Paging](https://mp.weixin.qq.com/s?__biz=MzIwMTAzMTMxMg==&mid=2649492903&idx=1&sn=6040b030d2a8125f38b7c9e7bd8f3054&chksm=8eec8658b99b0f4e07cf1c550096b87c5551a6da124906a67911dcae4a0656814a6e5cc13c84#rd)
     - [Add footer and header for paging](https://juejin.im/post/5caa0052f265da24ea7d3c2c#heading-5) ([Compare paging to BaseRecyclerViewAdapterHelper](#adapter))
+- [Databinding][databinding]
 <span id="adapter"></span>
 ## Powerful Open Source Project
 - Adapter:
@@ -85,7 +139,9 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
         - SpanUtils(TextView Rich Text Utils,Useful!)
         - 
         - ……
-
+## 数据传递
+- Parcelable
+    - 不写set方法，数据传递失效.   
 
 ## Useful Open Source Project
 - [FlycoRoundView](https://github.com/H07000223/FlycoRoundView):replace drawable shape,(a lot of drawable .xml will make you crazy),
@@ -186,3 +242,7 @@ You can upload your apk ,and you get a qrcode that someone can scan and download
     - [Umeng AppTrack](https://developer.umeng.com/docs/67964/detail/71107),(注意需要自行配置U-App的自定义事件，文档容易让人误解不需要配置）
 
 [Algorithms]:https://github.com/BryceLee/algorithms-learning
+[C_Primary]:https://github.com/BryceLee/algorithms-learning
+[databinding]:https://github.com/BryceLee/android-compass/blob/master/jatpack/databinding.md
+## Thanks:
+- 《Android开发艺术探索》
