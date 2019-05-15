@@ -47,17 +47,25 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - 每次都创建
 - singleTop
     - 事例在栈顶，就复用，否则重新创建。
-    ```
-    singleTop生效时，所走的生命周期如下：
-    2019-05-13 22:55:36.245 32679-32679/com.android.lanuchmode D/Tag:: onPause class com.android.lanuchmode.AActivity
-    2019-05-13 22:55:36.245 32679-32679/com.android.lanuchmode D/Tag:: onNewIntent class com.android.lanuchmode.AActivity
-    2019-05-13 22:55:36.247 32679-32679/com.android.lanuchmode D/Tag:: onResume class com.android.lanuchmode.AActivity
-    ```
 - singleTask
     - 栈内存在实例就复用，但是会清空在事例之上的所有其他实例；不存在就创建
     - 不存在所属任务栈，先创建任务栈再创建事例，并且入栈
 - singleInstance
-    - 只能独立的存在一个任务栈 
+    - 只能独立的存在一个任务栈;如果实例存在直接提到栈顶，这时候会调用
+    ```
+    如果实例还没有被创建，就走正常的Activity正常周期；
+    启动模式生效时，本身在栈顶，所走的生命周期如下：
+    onPause（） 
+    onNewIntent（） 
+    onResume（）
+
+    启动模式生效时，本身不在栈顶，所走的生命周期如下：
+    onNewIntent() 
+    onRestart() 
+    onStart() 
+    onResume() 
+
+    ```
 ## View
 - View位置坐标由以ViewGroup的左上角为顶点的坐标系来决定的，向右是x轴正方形，向下是y轴
 正方向；
