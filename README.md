@@ -37,20 +37,39 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 ## Language
 - Java
     - [内存模型](https://blog.csdn.net/javazejian/article/details/72772461#comments)
+    - https://juejin.im/post/5ab8d3d46fb9a028ca52f813
+    - 原子性：https://www.jianshu.com/p/cf57726e77f2
+    - 垃圾回收机制
+        - 垃圾回收机制： 
+            - 垃圾回收回收的堆内存；堆内存分为新生代和老生代，比例1：2； 对象是否应该被回收，涉及的算法主要是引用计数法和可达性分析算法。 
+            - GC回收算法有： 标记清除法；分为标记阶段和清除阶段，先标记出需要回收的对象，再清除标记的对象所占用的内存。优点就是容易实现，缺点是容易产生内存碎片，下次申请大内存的实话可能会导致提前GC。
+
+            - 复制算法；把内存按容量分为大小相等的两块,每次只使用一块。当其中一块内存用完了，把存活对象移动到一块中，回收之前的那一块内存。优点，运行高效，不容易产生内存碎片；缺点是内存空间使用等于缩小了一半，而且如果存活对象多的时候，效率会比较低。比较使用于存活对象少，回收对象多的场景。
+
+            - 标记整理法；标记阶段和标记清除法一样，都是标记出存活对象和可回收对象；然后把存活对象都推到内存的一端，然后清楚掉端边界以外的内存区域。优点，适用于存活对象多，回收对象少的场景。
+
+            - 分代回收算法（复制算法+标记整理法的优点结合） 我们根据对象存活的生命周期来采用不同的算法回收内存。一般堆内存分为新生代和老生代。新生代回收对象多，存活对象少，适合复制算法；老生代回收对象少，存活对象多，适合标记整理算法。
+
+            - 垃圾回收的时候，为了准确性，所有引用的状态不能改变，程序执行处于暂停状态，这也是GC卡顿的由来，但是一般来说这种卡顿都很短暂，不容易察觉，如果内存管理出现问题，就会有卡顿严重的感觉。
 - Rxjava
 - Kotlin
 - C
     - C入门记录
 - C++
-## Activity Launchmode
-- standard
+## Activity 
+- Lifecycle
+    - onPause()轻量存储
+    - onStop()重量回收，但是不宜太耗时
+    - onDestroy()回收
+- Launchmode
+    - standard
     - 每次都创建
-- singleTop
+    - singleTop
     - 事例在栈顶，就复用，否则重新创建。
-- singleTask
+    - singleTask
     - 栈内存在实例就复用，但是会清空在事例之上的所有其他实例；不存在就创建
     - 不存在所属任务栈，先创建任务栈再创建事例，并且入栈
-- singleInstance
+    - singleInstance
     - 只能独立的存在一个任务栈;如果实例存在直接提到栈顶，这时候会调用
     ```
     如果实例还没有被创建，就走正常的Activity正常周期；
@@ -66,12 +85,18 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     onResume() 
 
     ```
+## Fragment
 ## View
 - View位置坐标由以ViewGroup的左上角为顶点的坐标系来决定的，向右是x轴正方形，向下是y轴
 正方向；
 - View的触摸事件
     - MotionEvent
     - TouchSlop，被系统认为是最小的滑动距离，滑动距离必须大于等于这个值才会被系统认为是滑动事件。
+- cons
+- [Appbarlayout](https://developer.android.com/reference/android/support/design/widget/AppBarLayout)
+- [CoordinatorLayout](https://developer.android.com/reference/androidx/coordinatorlayout/widget/CoordinatorLayout.html)
+- [NestedScrollView](https://developer.android.com/reference/android/support/v4/widget/NestedScrollView?hl=en)
+-
 ### Android动画
 - View Animation：作用在View对象上，
   - tween Animation:写出开始和结束状态，系统会补充中间过程。有translate,scale,rotate,alpha四种效果动画。
@@ -147,6 +172,16 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
         - SpanUtils(TextView Rich Text Utils,Useful!)
         - 
         - ……
+- Arouter
+    - https://www.jianshu.com/p/857aea5b54a8 原来Arouter的跳转原理，就是用过注解处理器（annotationProcessor），扫描所有使用了@Route的类，把path信息和对应Class文件和一些参数绑定起来，并且并保存在相应的HaspMap里，path是key值，value是RouteMeta的对象。然后在跳转的时候再把数据拿出来使用。
+    - 实际上还是用context.startActivity(inent)
+- Eventbus
+    - https://juejin.im/post/5ae2e6dcf265da0b9d77f28e EventBus使用了观察者模式。在运行时默认使用反射来找到订阅的方法，这种方式，在大量使用EventBus的情况下，会有效率问题；也可以在编译期间，通过注解处理器（annotationProcessor）来生成辅助类，保存订阅方法的相关信息，类似ButterKnife，Arouter的做法。
+- ButterKnife
+    - https://juejin.im/post/5acec2b46fb9a028c6761628 通过注解处理器，把生成类的特征信息保存在编译生成类里，通过JavaPoet来辅助生成Java类代码
+    - ButterKnife.bind(this)-->docorview和对应的Class
+    - docorview.findViewByid(R.id...)
+
 ## 数据传递
 - Parcelable
     - 不写set方法，数据传递失效.   
@@ -179,6 +214,31 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 
 - SharedPreferences
     - [apply() vs commit()](https://www.jianshu.com/p/3b2ac6201b33)
+## Optimize
+- Layout
+    - ViewStub
+    - Inclide
+    - Merge
+    - Contractlayout
+- Bitmap
+- 内存泄露容易出现的场景
+    - Context泄漏（被某个静态类引用，比如单例）
+    - 匿名内部类
+    - 类似Handler这样具备延时操作的场景
+    - 无限循环Anime，没有关闭，就会导致Activity内存泄漏
+    - 在服务（系统服务或者自定义服务）中注册监听器，必须及时取消监听
+    - Rxjava配合RxLifecycle
+     - 静态内部类+弱引用
+- 方案：
+    - Context可以用ApplicationContext代替,及时释放，解绑，解监听
+- 查看内存使用情况
+    - adb shell dumpsys meminfo packagename
+- https://juejin.im/entry/589542ed2f301e0069054007
+https://www.jianshu.com/p/ac00e370f83d
+
+- 卡顿查找工具BlockCanary
+    - [原理](https://www.jianshu.com/p/e58992439793)
+    - 原理简述，UI更新的时候Looper的loop（）会调用handler的dispatchMessage()；如果卡顿，一定是发生在dispatchMessage里，我们就在dispatchMessage（）执行之后设置监听，如果事件差大于16ms就认为是卡顿。dump堆栈和CPU信息就好。
 
 ## Route
 - Aroute
@@ -192,7 +252,17 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - Rxbus
 
 ## JNI
-
+- 生成so流程
+    - 定义native方法
+    - javah生成头文件
+    - 写原生代码
+    - Android.mk
+    - Application.mk
+    - 生成so，ndk-build或者cmake
+- 引用
+    - 必须写和so中一样的native方法同样的包名，类名，方法名
+    - 配置gradle中设置ndk modulename 
+    - System.loadLibrary("modulename");
 ## NDK
 - NDK-Build
 
