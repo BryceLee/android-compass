@@ -1,0 +1,34 @@
+## Executor(Interface),ThreadPoolExecutor(Impl)
+- 构造参数说明：
+    - coolPoolsize
+        - 默认情况下一直活着，除非设置ThreadPoolExecutor的allowCoreThreadTimeout=true,核心线程闲置超时也会被终止
+    - maxinumPoolsize
+        - 最大线程数，新任务超过最大值就要等待
+    - keepAliveTime
+        - 线程闲置保活时间
+    - unit
+        - keepAliveTime的单位
+    - workQueue:任务队列，存储runnable对象
+    - ThreadFactory  
+        - 创建线程
+- 参考AsyncTask参数配置：
+    - coolposize=cpucount+1
+    - maximumpoolsize=cpucount*2+1
+    - 核心线程无超市机制，非核心线程超时事件1秒
+    - 任务队列容量128
+- 分类
+    - FixedThreadPool
+        - Executors.newFixedThreadPool()
+            - 固定核心线程，全是核心线程，无超时机制，无任务队列上线 
+            - 适合需要快速响应的任务
+        - Executors.newCachedThreadPool()
+            - 全是非核心线程，最大线程数Interget.Max_Value,60秒超时机制
+            - 无法存储任务，有新任务立即执行
+            - 适合执行大量耗时较少的任务（Retrofit?Rxjava?）
+        - Executors.newScheduledThreadPool()
+            - 核心线程固定，最大线程Inter.Max_Value
+            - 超时事件为0，非核心线程闲置会被立即回收
+            - 适合定时任务，具有周期性的任务
+        - Executor.SingleThreadExecutor()
+            - 只有一个核心线程
+            - 单线程的任务

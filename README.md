@@ -1,8 +1,21 @@
 # android-compass
 android-compass is a dev manual about Android Architecture,Third Libs ,Utils and Some Solutions to dev.
 # [README OF ENGLISH](https://github.com/BryceLee/android-compass/blob/master/README_EN.md)
+
 ## The Basis of Computer
+- 操作系统
+    - 多进程
+    - 多线程
 - 算法和数据结构 [Algorithms]
+    - HaspMap
+    - LinkedList
+    - 快排
+    - 最大堆
+- 计算机网络
+    - TCP/UDP
+    - Http/Http2
+    - QUIC
+
 
 ## 设计思想
 - 什么是控制反转？
@@ -56,6 +69,7 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - C
     - C入门记录
 - C++
+# The Basis os Android
 ## Activity 
 - Lifecycle
     - onPause()轻量存储
@@ -86,17 +100,20 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 
     ```
 ## Fragment
+## Broadcast
+    - 广播有哪些类型？
+    - 本地广播的实现原理
+    - EventBus 类的广播的实现
 ## View
-- View位置坐标由以ViewGroup的左上角为顶点的坐标系来决定的，向右是x轴正方形，向下是y轴
+    - View位置坐标由以ViewGroup的左上角为顶点的坐标系来决定的，向右是x轴正方形，向下是y轴
 正方向；
-- View的触摸事件
+    - View的触摸事件
     - MotionEvent
     - TouchSlop，被系统认为是最小的滑动距离，滑动距离必须大于等于这个值才会被系统认为是滑动事件。
-- cons
-- [Appbarlayout](https://developer.android.com/reference/android/support/design/widget/AppBarLayout)
-- [CoordinatorLayout](https://developer.android.com/reference/androidx/coordinatorlayout/widget/CoordinatorLayout.html)
-- [NestedScrollView](https://developer.android.com/reference/android/support/v4/widget/NestedScrollView?hl=en)
--
+    - ConstractLayout
+    - [Appbarlayout](https://developer.android.com/reference/android/support/design/widget/AppBarLayout)
+    - [CoordinatorLayout](https://developer.android.com/reference/androidx/coordinatorlayout/widget/CoordinatorLayout.html)
+    - [NestedScrollView](https://developer.android.com/reference/android/support/v4/widget/NestedScrollView?hl=en)
 ### Android动画
 - View Animation：作用在View对象上，
   - tween Animation:写出开始和结束状态，系统会补充中间过程。有translate,scale,rotate,alpha四种效果动画。
@@ -113,58 +130,38 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - [interpolator&TypeEvaluator](https://blog.csdn.net/carson_ho/article/details/72863901)
 - 事件传递
 - [ConstraintLayout](https://mp.weixin.qq.com/s/JijR16p-DjlsZz8wn5D-PQ)(放一篇总结的很不错的文章)
+
+## Data Store
+- 存储的方式
+- SharedPreference原理
+- 如果想实现跨应用之间的数据操作，怎么实现？
+- 如果需要跨进程读写呢？
+
+- SharedPreferences
+## 数据传递
+- Parcelable
+    - 不写set方法，数据传递失效.   
 ## Android消息机制
 - Handler
     - 原理:ThreadLocal可以在每个线程中存储数据并且获取数据，要使用Handler，线程必须拥有Looper，当前一开始时没有Looper的，Looper被创建存储在ThreadLocal中。 消息被存储在MessageQueue这个单链表中，Looper无限的从队列中取消息来处理。ActivityThread就是UI线程，ActivityThread被创建的时候就初始化了Looper，这是UI线程默认可以使用Handler的原因。
 
-## Executor(Interface),ThreadPoolExecutor(Impl)
-- 构造参数说明：
-    - coolPoolsize
-        - 默认情况下一直活着，除非设置ThreadPoolExecutor的allowCoreThreadTimeout=true,核心线程闲置超时也会被终止
-    - maxinumPoolsize
-        - 最大线程数，新任务超过最大值就要等待
-    - keepAliveTime
-        - 线程闲置保活时间
-    - unit
-        - keepAliveTime的单位
-    - workQueue:任务队列，存储runnable对象
-    - ThreadFactory  
-        - 创建线程
-- 参考AsyncTask参数配置：
-    - coolposize=cpucount+1
-    - maximumpoolsize=cpucount*2+1
-    - 核心线程无超市机制，非核心线程超时事件1秒
-    - 任务队列容量128
-- 分类
-    - FixedThreadPool
-        - Executors.newFixedThreadPool()
-            - 固定核心线程，全是核心线程，无超时机制，无任务队列上线 
-            - 适合需要快速响应的任务
-        - Executors.newCachedThreadPool()
-            - 全是非核心线程，最大线程数Interget.Max_Value,60秒超时机制
-            - 无法存储任务，有新任务立即执行
-            - 适合执行大量耗时较少的任务（Retrofit?Rxjava?）
-        - Executors.newScheduledThreadPool()
-            - 核心线程固定，最大线程Inter.Max_Value
-            - 超时事件为0，非核心线程闲置会被立即回收
-            - 适合定时任务，具有周期性的任务
-        - Executor.SingleThreadExecutor()
-            - 只有一个核心线程
-            - 单线程的任务
 
-## Architecture
+
+## Executor(Interface),ThreadPoolExecutor(Impl)
+- [java][java]
+# Architecture
 - MVP
 - MVVM
 - Dagger2
      - [Dagger2源码分析](https://github.com/BryceLee/android-compass/blob/master/FramesSourceAnalysis/Dagger2SourceAnalysis.md)
-## JetPack
+# JetPack
 - Paging
     - [office document](https://developer.android.google.cn/topic/libraries/architecture/paging/#java)
     - [Introduce to Paging](https://mp.weixin.qq.com/s?__biz=MzIwMTAzMTMxMg==&mid=2649492903&idx=1&sn=6040b030d2a8125f38b7c9e7bd8f3054&chksm=8eec8658b99b0f4e07cf1c550096b87c5551a6da124906a67911dcae4a0656814a6e5cc13c84#rd)
     - [Add footer and header for paging](https://juejin.im/post/5caa0052f265da24ea7d3c2c#heading-5) ([Compare paging to BaseRecyclerViewAdapterHelper](#adapter))
 - [Databinding][databinding]
 <span id="adapter"></span>
-## Powerful Open Source Project
+# Powerful Open Source Project
 - Adapter:
     - [BaseRecyclerViewAdapterHelper](https://github.com/CymChad/BaseRecyclerViewAdapterHelper)
 - Utils:
@@ -181,20 +178,16 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - https://juejin.im/post/5acec2b46fb9a028c6761628 通过注解处理器，把生成类的特征信息保存在编译生成类里，通过JavaPoet来辅助生成Java类代码
     - ButterKnife.bind(this)-->docorview和对应的Class
     - docorview.findViewByid(R.id...)
-
-## 数据传递
-- Parcelable
-    - 不写set方法，数据传递失效.   
-
-## Useful Open Source Project
-- [FlycoRoundView](https://github.com/H07000223/FlycoRoundView):replace drawable shape,(a lot of drawable .xml will make you crazy),
-
 ## Network
 - Okhttp
 - Retrofit
 - Volley
 - Gson
 - FastJson
+## Useful Open Source Project
+- [FlycoRoundView](https://github.com/H07000223/FlycoRoundView):replace drawable shape,(a lot of drawable .xml will make you crazy),
+
+
 
 ## Image Loader 
 - Fresco
@@ -209,12 +202,9 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - [ExoPlayer](https://github.com/google/ExoPlayer)
 - IjkPlayer
 
-## Data Store
-- ORM
-
-- SharedPreferences
     - [apply() vs commit()](https://www.jianshu.com/p/3b2ac6201b33)
-## Optimize
+# 数据加密
+# Optimize
 - Layout
     - ViewStub
     - Inclide
@@ -231,15 +221,35 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
      - 静态内部类+弱引用
 - 方案：
     - Context可以用ApplicationContext代替,及时释放，解绑，解监听
+## CPU
+- [Inspect CPU](https://developer.android.com/studio/profile/cpu-profiler)
 - 查看内存使用情况
     - adb shell dumpsys meminfo packagename
 - https://juejin.im/entry/589542ed2f301e0069054007
 https://www.jianshu.com/p/ac00e370f83d
 
-- 卡顿查找工具BlockCanary
-    - [原理](https://www.jianshu.com/p/e58992439793)
-    - 原理简述，UI更新的时候Looper的loop（）会调用handler的dispatchMessage()；如果卡顿，一定是发生在dispatchMessage里，我们就在dispatchMessage（）执行之后设置监听，如果事件差大于16ms就认为是卡顿。dump堆栈和CPU信息就好。
+- 卡顿查找工具
+    - BlockCanary
+        - [原理](https://www.jianshu.com/p/e58992439793)
+        - 原理简述，Looper的loop（）会调用handler的dispatchMessage()；如果卡顿，一定是发生在dispatchMessage里，我们就在dispatchMessage（）执行之后设置监听，如果事件差大于16ms就认为是卡顿。dump堆栈和CPU信息就好。
+    - Traceview
+- 频繁GC（内存抖动）
+    - 内存抖动(Memory Churn), 即大量的对象被创建又在短时间内马上被释放。
+    - 瞬间产生大量的对象会严重占用 Young Generation 的内存区域, 当达到阀值, 剩余空间不够的时候, 也会触发 GC。即使每次分配的对象需要占用很少的内存，但是他们叠加在一起会增加 Heap 的压力, 从而触发更多的 GC
+- 启动优化
+    - [android official docs:performance/vitals/launch-time](https://developer.android.com/topic/performance/vitals/launch-time#profiling)
+    - [Android App 冷启动优化方案](https://juejin.im/post/5aec28bb6fb9a07ac90d13dc)
+    - [支付宝 App 启动速度优化](https://mp.weixin.qq.com/s/dATfVyGQRTQ9KV1L3RueUQ)(作者: 入弦 | 来源：公众号 mPaaS  )
+        - 核心思路：对Dalvik做抑制GC回收，空间换时间；
+- ANR
 
+# Hybrid
+- Fultter
+- Rn
+- Weex
+- WebView
+- links
+    - [Flutter 要全平台制霸？我看悬](https://mp.weixin.qq.com/s/VnnhurJ03vEb75uB2PS6Wg)
 ## Route
 - Aroute
     - @Route
@@ -268,7 +278,8 @@ https://www.jianshu.com/p/ac00e370f83d
 
 ## Gralde
 - Groovy
-
+# Android Studio
+- [adb#shellcommands](https://developer.android.com/studio/command-line/adb#shellcommands)
 ## App Version Update
 - [Bugly](https://bugly.qq.com/docs/introduction/app-upgrade-introduction)
     - [Buyly Summary](https://www.jianshu.com/p/168feeea2363)
@@ -277,7 +288,12 @@ https://www.jianshu.com/p/ac00e370f83d
 You can upload your apk ,and you get a qrcode that someone can scan and download apk for test it.I think Pgyer is better because it can keep more valid apk history.
 - [Pgyer](https://www.pgyer.com/)
 - [Fir](https://fir.im/)
-
+## Proguard
+- Proguard
+- read proguard code
+    - proguardgui.sh(android_sdk_path/tools/proguard/bin)
+        - 利用mapping还原被混淆的代码
+        - Mac在terminal输入proguardgui.sh既可打开工具
 ## IM
 - [Easemobe](http://www.easemob.com/product/im)（环信IM） 
     - [Customer Service](http://docs.easemob.com/cs/300visitoraccess/androidsdk)(客服云)
@@ -298,7 +314,7 @@ You can upload your apk ,and you get a qrcode that someone can scan and download
     - Map(When service don't give data,you can custom data)
 - Python Request
 
-## Bug Mangae
+## Bug Manage
 - Bugly
 - Bugtags
 
@@ -314,13 +330,20 @@ You can upload your apk ,and you get a qrcode that someone can scan and download
 
 ## UI
 - UI不用[蓝湖](https://lanhuapp.com)类设计稿管理工具，客户端就难受系列....
-
+# 开发场景
+## 音视频
 ## 电商场景
+- Tangram
+    - https://blog.csdn.net/u013541140/article/details/89517186
+- vlayout
 - 统计
     - [Umeng AppTrack](https://developer.umeng.com/docs/67964/detail/71107),(注意需要自行配置U-App的自定义事件，文档容易让人误解不需要配置）
 
 [Algorithms]:https://github.com/BryceLee/algorithms-learning
 [C_Primary]:https://github.com/BryceLee/algorithms-learning
 [databinding]:https://github.com/BryceLee/android-compass/blob/master/jetpack/databinding.md
-## Thanks:
+[java]:https://github.com/BryceLee/android-compass/blob/master/languages/java.md
+# Thanks:
 - 《Android开发艺术探索》
+- [面试时究竟在问些什么](http://blog.zhaiyifan.cn/2019/01/25/when-i-talk-about-interview/)
+- [Android APP 卡顿问题分析及解决方案](https://blog.csdn.net/zhanggang740/article/details/80199435)
