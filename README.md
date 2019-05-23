@@ -45,6 +45,8 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - 指的是应该用抽象（接口）去替代高层次模块对低层次模块的依赖。
     - 优点：解耦合
     - 我倒觉得叫依赖转移更贴切，Dependency Transfer Principle，其实并没有真的倒转什么，叫依赖倒置反而让人觉得不太好理解。或者可以称之为面向接口编程。
+- 迪米特法则
+    - 
 - Thanks: [SOLID Principles : The Definitive Guide](https://android.jlelse.eu/solid-principles-the-definitive-guide-75e30a284dea)
 
 ## Language
@@ -52,24 +54,45 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - [内存模型](https://blog.csdn.net/javazejian/article/details/72772461#comments)
     - https://juejin.im/post/5ab8d3d46fb9a028ca52f813
     - 原子性：https://www.jianshu.com/p/cf57726e77f2
-    - 垃圾回收机制
-        - 垃圾回收机制： 
-            - 垃圾回收回收的堆内存；堆内存分为新生代和老生代，比例1：2； 对象是否应该被回收，涉及的算法主要是引用计数法和可达性分析算法。 
-            - GC回收算法有： 标记清除法；分为标记阶段和清除阶段，先标记出需要回收的对象，再清除标记的对象所占用的内存。优点就是容易实现，缺点是容易产生内存碎片，下次申请大内存的实话可能会导致提前GC。
-
-            - 复制算法；把内存按容量分为大小相等的两块,每次只使用一块。当其中一块内存用完了，把存活对象移动到一块中，回收之前的那一块内存。优点，运行高效，不容易产生内存碎片；缺点是内存空间使用等于缩小了一半，而且如果存活对象多的时候，效率会比较低。比较使用于存活对象少，回收对象多的场景。
-
-            - 标记整理法；标记阶段和标记清除法一样，都是标记出存活对象和可回收对象；然后把存活对象都推到内存的一端，然后清楚掉端边界以外的内存区域。优点，适用于存活对象多，回收对象少的场景。
-
-            - 分代回收算法（复制算法+标记整理法的优点结合） 我们根据对象存活的生命周期来采用不同的算法回收内存。一般堆内存分为新生代和老生代。新生代回收对象多，存活对象少，适合复制算法；老生代回收对象少，存活对象多，适合标记整理算法。
-
-            - 垃圾回收的时候，为了准确性，所有引用的状态不能改变，程序执行处于暂停状态，这也是GC卡顿的由来，但是一般来说这种卡顿都很短暂，不容易察觉，如果内存管理出现问题，就会有卡顿严重的感觉。
+    - [垃圾回收机制](https://github.com/BryceLee/java-compass/blob/master/README.md#heading-2)
+           
 - Rxjava
 - Kotlin
 - C
     - C入门记录
 - C++
-# The Basis os Android
+# Android Basis
+## Android DataStructure
+- SpareArray
+## Android动画
+- View Animation：作用在View对象上，
+  - tween Animation:写出开始和结束状态，系统会补充中间过程。有translate,scale,rotate,alpha四种效果动画。
+  - frame Animation：自定义动画的每一帧。
+- Property Animation：可以不作用在View对象上（ValueAnimation），也可以作用在对象上(objectAnimation)，具有更高的可扩展性。是在API 11时提供等。
+  - ValueAnimation
+  - ObjectAnimation
+
+  - 可以监听动画效果，也可以使用插值器来控制动画速度。
+  - ![image](https://user-gold-cdn.xitu.io/2019/2/22/169158b7461a93ba?w=1140&h=270&f=png&s=75625)
+  
+- Thanks:
+    - [Android动画总结](https://blog.csdn.net/carson_ho/article/details/79860980)
+    - [interpolator&TypeEvaluator](https://blog.csdn.net/carson_ho/article/details/72863901)
+- 事件传递
+- [ConstraintLayout](https://mp.weixin.qq.com/s/JijR16p-DjlsZz8wn5D-PQ)(放一篇总结的很不错的文章)
+
+## Data Store
+- 存储的方式
+- SharedPreference原理
+- 如果想实现跨应用之间的数据操作，怎么实现？
+- 如果需要跨进程读写呢？
+- SharedPreferences
+## 缓存
+- [Lrucache](https://developer.android.com/reference/android/util/LruCache)（Lru算法）
+## 数据传递
+- Parcelable
+    - 不写set方法，数据传递失效.   
+## Framework
 ## Activity 
 - Lifecycle
     - onPause()轻量存储
@@ -104,48 +127,25 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - 广播有哪些类型？
     - 本地广播的实现原理
     - EventBus 类的广播的实现
-## View
-    - View位置坐标由以ViewGroup的左上角为顶点的坐标系来决定的，向右是x轴正方形，向下是y轴
-正方向；
-    - View的触摸事件
-    - MotionEvent
-    - TouchSlop，被系统认为是最小的滑动距离，滑动距离必须大于等于这个值才会被系统认为是滑动事件。
-    - ConstractLayout
-    - [Appbarlayout](https://developer.android.com/reference/android/support/design/widget/AppBarLayout)
-    - [CoordinatorLayout](https://developer.android.com/reference/androidx/coordinatorlayout/widget/CoordinatorLayout.html)
-    - [NestedScrollView](https://developer.android.com/reference/android/support/v4/widget/NestedScrollView?hl=en)
-### Android动画
-- View Animation：作用在View对象上，
-  - tween Animation:写出开始和结束状态，系统会补充中间过程。有translate,scale,rotate,alpha四种效果动画。
-  - frame Animation：自定义动画的每一帧。
-- Property Animation：可以不作用在View对象上（ValueAnimation），也可以作用在对象上(objectAnimation)，具有更高的可扩展性。是在API 11时提供等。
-  - ValueAnimation
-  - ObjectAnimation
-
-  - 可以监听动画效果，也可以使用插值器来控制动画速度。
-  - ![image](https://user-gold-cdn.xitu.io/2019/2/22/169158b7461a93ba?w=1140&h=270&f=png&s=75625)
-  
-- Thanks:
-    - [Android动画总结](https://blog.csdn.net/carson_ho/article/details/79860980)
-    - [interpolator&TypeEvaluator](https://blog.csdn.net/carson_ho/article/details/72863901)
-- 事件传递
-- [ConstraintLayout](https://mp.weixin.qq.com/s/JijR16p-DjlsZz8wn5D-PQ)(放一篇总结的很不错的文章)
-
-## Data Store
-- 存储的方式
-- SharedPreference原理
-- 如果想实现跨应用之间的数据操作，怎么实现？
-- 如果需要跨进程读写呢？
-
-- SharedPreferences
-## 数据传递
-- Parcelable
-    - 不写set方法，数据传递失效.   
-## Android消息机制
-- Handler
+## Service
+    - AMS
+    - PMS
+## Handler
     - 原理:ThreadLocal可以在每个线程中存储数据并且获取数据，要使用Handler，线程必须拥有Looper，当前一开始时没有Looper的，Looper被创建存储在ThreadLocal中。 消息被存储在MessageQueue这个单链表中，Looper无限的从队列中取消息来处理。ActivityThread就是UI线程，ActivityThread被创建的时候就初始化了Looper，这是UI线程默认可以使用Handler的原因。
-
-
+## Permissions
+- [overview](https://developer.android.com/guide/topics/permissions/overview)
+## Binder
+### View
+- View位置坐标由以ViewGroup的左上角为顶点的坐标系来决定的，向右是x轴正方形，向下是y轴
+正方向；
+- View的触摸事件
+- MotionEvent
+- TouchSlop，被系统认为是最小的滑动距离，滑动距离必须大于等于这个值才会被系统认为是滑动事件。
+- ConstractLayout
+- [Appbarlayout](https://developer.android.com/reference/android/support/design/widget/AppBarLayout)
+- [CoordinatorLayout](https://developer.android.com/reference/androidx/coordinatorlayout/widget/CoordinatorLayout.html)
+- [NestedScrollView](https://developer.android.com/reference/android/support/v4/widget/NestedScrollView?hl=en)
+## 渲染机制
 
 ## Executor(Interface),ThreadPoolExecutor(Impl)
 - [java][java]
@@ -201,16 +201,20 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 ## Video Player
 - [ExoPlayer](https://github.com/google/ExoPlayer)
 - IjkPlayer
-
     - [apply() vs commit()](https://www.jianshu.com/p/3b2ac6201b33)
 # 数据加密
 # Optimize
+- Tips
+    - [Tips](https://developer.android.com/training/articles/perf-tips)
+## UI渲染
 - Layout
     - ViewStub
     - Inclide
     - Merge
     - Contractlayout
 - Bitmap
+    - 8888
+    - 565
 - 内存泄露容易出现的场景
     - Context泄漏（被某个静态类引用，比如单例）
     - 匿名内部类
@@ -221,33 +225,66 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
      - 静态内部类+弱引用
 - 方案：
     - Context可以用ApplicationContext代替,及时释放，解绑，解监听
-## CPU
-- [Inspect CPU](https://developer.android.com/studio/profile/cpu-profiler)
+## 卡顿优化
+- [Slow rendering](https://developer.android.com/topic/performance/vitals/render#top_of_page)
+### 卡顿查找工具
+- BlockCanary
+    - [原理](https://www.jianshu.com/p/e58992439793)
+    - 原理简述，Looper的loop（）会调用handler的dispatchMessage()；如果卡顿，一定是发生在dispatchMessage里，我们就在dispatchMessage（）执行之后设置监听，如果事件差大于16ms就认为是卡顿。dump堆栈和CPU信息就好。
+    - 如果BlockCanary日志的信息还是无法分析出原因，建议监听CPU活动情况，比如Profiler的Trace Java Methods,然后可以看Flame Chart，找到和项目代码相关的函数，查看耗时，分析可疑函数即可。
+- Linux命令
+- 图形化工具
+    - 实现方式有两个流派，instrument：获取某段时间内所有函数的调用的过程，分析函数调用过程，再进一步分析待优化的点；sample：有选择性或者用采样点方式观察某些函数的调用过程，推进出流程的可疑点，再细化分析；
+    - instrument:
+        - Traceview,性能损耗比较大
+        - Naoscope(Uber)，性能损耗比较小
+    - Sample:
+        - systrace
+    - Android Studio Profiler(降低开发门槛)
+        - Sample Java Methods(类似traceview的sample类型)
+        - Trace Java Methods(类似traceview的instrument类型)
+        - Trace System Calls(类似systrace)
+        - Sample C/C++ Calls（类似Simpleperf）
+        - 以上分析工具都支持Call Chart和Flame Chart
+            - Call Chart
+                - Traceview,systrace默认用Call Chart来展示。它按照程序的函数执行数据来展示，适合分析整个流程的调用。像心电图。
+            - 系统API显示橘色，自己的程序函数显示绿色，第三方函数（包括Java API）被显示为蓝色。
+                ![](https://developer.android.com/studio/images/profile/call_chart_1-2X.png)
+            - Flame Chart就是火焰图，以一个全局的视野来看待一段时间的调用分布。像X光。时间+空间的展示方式，从下而上是调用顺序，方法图形块的宽度代表时间比例。（可以做内存，I/O分析）。
+### CPU
+- 卡顿原因很多，但最终都会反应到CPU时间上：用户时间和系统时间，分别是用户应用程序代码执行消耗时间和执行内核态系统调用消耗时间，后者包括I/O，锁等
+- [Inspect CPU](https://developer.android.com/studio/profile/cpu-profiler) 
+- 频繁GC（内存抖动）
+    - 内存抖动(Memory Churn), 即大量的对象被创建又在短时间内马上被释放。
+    - 瞬间产生大量的对象会严重占用 Young Generation 的内存区域, 当达到阀值, 剩余空间不够的时候, 也会触发 GC。即使每次分配的对象需要占用很少的内存，但是他们叠加在一起会增加 Heap 的压力, 从而触发更多的 GC
+- Android Profiler
+    - https://blog.csdn.net/niubitianping/article/details/72617864
+### 内存优化
 - 查看内存使用情况
     - adb shell dumpsys meminfo packagename
 - https://juejin.im/entry/589542ed2f301e0069054007
 https://www.jianshu.com/p/ac00e370f83d
-
-- 卡顿查找工具
-    - BlockCanary
-        - [原理](https://www.jianshu.com/p/e58992439793)
-        - 原理简述，Looper的loop（）会调用handler的dispatchMessage()；如果卡顿，一定是发生在dispatchMessage里，我们就在dispatchMessage（）执行之后设置监听，如果事件差大于16ms就认为是卡顿。dump堆栈和CPU信息就好。
-    - Traceview
-- 频繁GC（内存抖动）
-    - 内存抖动(Memory Churn), 即大量的对象被创建又在短时间内马上被释放。
-    - 瞬间产生大量的对象会严重占用 Young Generation 的内存区域, 当达到阀值, 剩余空间不够的时候, 也会触发 GC。即使每次分配的对象需要占用很少的内存，但是他们叠加在一起会增加 Heap 的压力, 从而触发更多的 GC
-- 启动优化
-    - [android official docs:performance/vitals/launch-time](https://developer.android.com/topic/performance/vitals/launch-time#profiling)
-    - [Android App 冷启动优化方案](https://juejin.im/post/5aec28bb6fb9a07ac90d13dc)
-    - [支付宝 App 启动速度优化](https://mp.weixin.qq.com/s/dATfVyGQRTQ9KV1L3RueUQ)(作者: 入弦 | 来源：公众号 mPaaS  )
+- [offical docs](https://developer.android.com/studio/profile/memory-profiler?hl=zh-cn)
+- [leakcanary](https://github.com/square/leakcanary)
+### 启动优化
+- [android official docs:performance/vitals/launch-time](https://developer.android.com/topic/performance/vitals/launch-time#profiling)
+- [Android App 冷启动优化方案](https://juejin.im/post/5aec28bb6fb9a07ac90d13dc)
+- [支付宝 App 启动速度优化](https://mp.weixin.qq.com/s/dATfVyGQRTQ9KV1L3RueUQ)(作者: 入弦 | 来源：公众号 mPaaS  )
         - 核心思路：对Dalvik做抑制GC回收，空间换时间；
 - ANR
-
+- Android GC(和JavaGC有一些区别)
+### 减少应用体积
+- [offical docs](https://developer.android.com/topic/performance/reduce-apk-size)
 # Hybrid
 - Fultter
 - Rn
 - Weex
 - WebView
+    - JavaScriptInterface
+        - 使用@JavaScriptInterface来绑定交互方法
+        - js用这样的代码调用native:window.JavaScriptInterface.callHandler...
+    - [WebViewJavascriptBridge](https://blog.csdn.net/sk719887916/article/details/47189607)
+    -  js用这样的代码调用native:window.WebViewJavascriptBridge.callHandler...
 - links
     - [Flutter 要全平台制霸？我看悬](https://mp.weixin.qq.com/s/VnnhurJ03vEb75uB2PS6Wg)
 ## Route
@@ -275,6 +312,7 @@ https://www.jianshu.com/p/ac00e370f83d
     - System.loadLibrary("modulename");
 ## NDK
 - NDK-Build
+- CMake
 
 ## Gralde
 - Groovy
@@ -285,6 +323,12 @@ https://www.jianshu.com/p/ac00e370f83d
     - [Buyly Summary](https://www.jianshu.com/p/168feeea2363)
 
 ## Bult-in Test
+- Auto Pack
+    - [Jenkins](https://jenkins.io/doc/)
+    - [Chinese Introduction](https://blog.csdn.net/ATangSir/article/details/71699403)
+    - 注意点:
+        - 关联Git仓库的时候要添加证书，方式一，仓库HTTP地址+仓库账号密码；方式二，本地创建jenkins SSH，jenins上配置私钥，仓库里配置共钥。[说明](https://www.cnblogs.com/liyuanhong/p/5762981.html)
+        - 一定要在Global Tool Configuration（全局工具配置）里配置Git,Gradle信息，前者不配置，拉不到数据，后者不配置无法构建apk
 You can upload your apk ,and you get a qrcode that someone can scan and download apk for test it.I think Pgyer is better because it can keep more valid apk history.
 - [Pgyer](https://www.pgyer.com/)
 - [Fir](https://fir.im/)
@@ -292,7 +336,7 @@ You can upload your apk ,and you get a qrcode that someone can scan and download
 - Proguard
 - read proguard code
     - proguardgui.sh(android_sdk_path/tools/proguard/bin)
-        - 利用mapping还原被混淆的代码
+        - 利用Retrace功能，结合mapping还原被混淆的代码
         - Mac在terminal输入proguardgui.sh既可打开工具
 ## IM
 - [Easemobe](http://www.easemob.com/product/im)（环信IM） 
@@ -328,7 +372,7 @@ You can upload your apk ,and you get a qrcode that someone can scan and download
 ## 反编译
 - [Mac下反编译教程][http://www.devio.org/2018/05/08/Android-reverse-engineering-for-mac/]
 
-## UI
+## UI Desgin
 - UI不用[蓝湖](https://lanhuapp.com)类设计稿管理工具，客户端就难受系列....
 # 开发场景
 ## 音视频
@@ -345,5 +389,10 @@ You can upload your apk ,and you get a qrcode that someone can scan and download
 [java]:https://github.com/BryceLee/android-compass/blob/master/languages/java.md
 # Thanks:
 - 《Android开发艺术探索》
+- 《Android开发高手课》（张绍文）
 - [面试时究竟在问些什么](http://blog.zhaiyifan.cn/2019/01/25/when-i-talk-about-interview/)
 - [Android APP 卡顿问题分析及解决方案](https://blog.csdn.net/zhanggang740/article/details/80199435)
+- [CS-Notes](https://github.com/CyC2018/CS-Notes/blob/master/notes/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%20-%20%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86.md#1-%E6%9C%80%E4%BD%B3)
+- 《Android工程师的“面试指南”》（孙鹏飞）
+- [Linux环境下进程的CPU占用率](http://www.samirchen.com/linux-cpu-performance/)
+- [Android 中高级工程师面试复习大纲](https://juejin.im/post/5cdd7a94f265da03775c781a)
