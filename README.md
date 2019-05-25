@@ -48,7 +48,9 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - 迪米特法则
     - 
 - Thanks: [SOLID Principles : The Definitive Guide](https://android.jlelse.eu/solid-principles-the-definitive-guide-75e30a284dea)
-
+## 设计模式
+- 装饰者模式
+    - [link](https://www.jianshu.com/p/c26b9b4a9d9e)
 ## Language
 - Java
     - [内存模型](https://blog.csdn.net/javazejian/article/details/72772461#comments)
@@ -181,6 +183,7 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 ## Network
 - Okhttp
 - Retrofit
+    - [多个BaseUrl，一个Retrofit实例](https://www.jianshu.com/p/2919bdb8d09a)
 - Volley
 - Gson
 - FastJson
@@ -281,10 +284,10 @@ https://www.jianshu.com/p/ac00e370f83d
 - Weex
 - WebView
     - JavaScriptInterface
-        - 使用@JavaScriptInterface来绑定交互方法
         - js用这样的代码调用native:window.JavaScriptInterface.callHandler...
-    - [WebViewJavascriptBridge](https://blog.csdn.net/sk719887916/article/details/47189607)
-    -  js用这样的代码调用native:window.WebViewJavascriptBridge.callHandler...
+            - 使用@JavaScriptInterface来绑定交互方法
+        -  js用这样的代码调用native:window.WebViewJavascriptBridge.callHandler...
+            - [WebViewJavascriptBridge](https://blog.csdn.net/sk719887916/article/details/47189607)
 - links
     - [Flutter 要全平台制霸？我看悬](https://mp.weixin.qq.com/s/VnnhurJ03vEb75uB2PS6Wg)
 ## Route
@@ -297,7 +300,11 @@ https://www.jianshu.com/p/ac00e370f83d
 ## Communication
 - [Eventbus](https://github.com/greenrobot/EventBus)
 - Rxbus
+## Apk
+- 签名校验
+    - jarsigner -certs -verbose -verify xxx.apk ([apk是否已经签名？](https://blog.csdn.net/qq_36005519/article/details/53519481))
 
+        
 ## JNI
 - 生成so流程
     - 定义native方法
@@ -357,9 +364,20 @@ You can upload your apk ,and you get a qrcode that someone can scan and download
     - [Introduce to Charles](https://juejin.im/post/5b4f005ae51d45191c7e534a)
     - Map(When service don't give data,you can custom data)
 - Python Request
-
+## update
+- Bugly
+    - update    
+    - hot fix
+        - 注意：Tinker不支持修改AndroidManifest.xml，Tinker不支持新增四大组件(1.9.0支持新增非export的Activity)；
+        - [流行框架比较，原理说明](https://www.cnblogs.com/popfisher/p/8543973.html)
 ## Bug Manage
 - Bugly
+    - 必须设置
+    ```
+    ndk {
+                abiFilters "armeabi-v7a"
+        }
+    ```
 - Bugtags
 
 ## team management
