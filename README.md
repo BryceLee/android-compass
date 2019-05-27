@@ -25,8 +25,9 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
    concerns for implementations.[(FROM FRF74230)](https://tools.ietf.org/html/rfc7230),
             - 超文本传输协议是为分布式的，协作的，超文本信息系统而生的无状态，应用层的协议。他采用request/response的方式来进行客户端和服务器之间的通信。
             - 请求和响应由请求行(状态行)+头部+请求体(响应体)构成。
-            - ABDF
-                -操作符（定义语法）
+            - 用ABDF规范来HTTP的形式
+                - 扩充巴科斯-瑙尔范式[(ABNF)](https://zh.wikipedia.org/wiki/%E6%89%A9%E5%85%85%E5%B7%B4%E7%A7%91%E6%96%AF%E8%8C%83%E5%BC%8F)是一种基于巴科斯-瑙尔范式（BNF）的元语言，但它有自己的语法和派生规则。描述一种作为双向通信协议语言的形式系统.
+                - 操作符（定义语法）
                     - 空白字符SP
                     - 选择/
                     - 值范围%c##-##
@@ -38,7 +39,7 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
                     - LF（换行）
                     - HTAB （横向字表符号）
                 - ABDF描述的HTTP协议格式：
-                    - 扩充巴科斯-瑙尔范式[(ABNF)](https://zh.wikipedia.org/wiki/%E6%89%A9%E5%85%85%E5%B7%B4%E7%A7%91%E6%96%AF%E8%8C%83%E5%BC%8F)是一种基于巴科斯-瑙尔范式（BNF）的元语言，但它有自己的语法和派生规则。描述一种作为双向通信协议语言的形式系统.
+                   
                     - HTTP-meaage=startline *(header-field CRLF)CRLF[message-body]
                         - start-line = method SP request/response request-target SP HTTP-version CRLF
                         - status-line = HTTP-version SP status-code SP reason-phrase CRLF 
@@ -255,16 +256,6 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - Bitmap
     - 8888
     - 565
-- 内存泄露容易出现的场景
-    - Context泄漏（被某个静态类引用，比如单例）
-    - 匿名内部类
-    - 类似Handler这样具备延时操作的场景
-    - 无限循环Anime，没有关闭，就会导致Activity内存泄漏
-    - 在服务（系统服务或者自定义服务）中注册监听器，必须及时取消监听
-    - Rxjava配合RxLifecycle
-     - 静态内部类+弱引用
-- 方案：
-    - Context可以用ApplicationContext代替,及时释放，解绑，解监听
 ## 卡顿优化
 - [Slow rendering](https://developer.android.com/topic/performance/vitals/render#top_of_page)
 ### 卡顿查找工具
@@ -300,6 +291,16 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - Android Profiler
     - https://blog.csdn.net/niubitianping/article/details/72617864
 ### 内存优化
+- 内存泄露容易出现的场景
+    - Context泄漏（被某个静态类引用，比如单例）
+    - 匿名内部类
+    - 类似Handler这样具备延时操作的场景
+    - 无限循环Anime，没有关闭，就会导致Activity内存泄漏
+    - 在服务（系统服务或者自定义服务）中注册监听器，必须及时取消监听
+    - Rxjava配合RxLifecycle
+     - 静态内部类+弱引用
+- 方案：
+    - Context可以用ApplicationContext代替,及时释放，解绑，解监听
 - 查看内存使用情况
     - adb shell dumpsys meminfo packagename
 - https://juejin.im/entry/589542ed2f301e0069054007
@@ -315,6 +316,39 @@ https://www.jianshu.com/p/ac00e370f83d
 - Android GC(和JavaGC有一些区别)
 ### 减少应用体积
 - [offical docs](https://developer.android.com/topic/performance/reduce-apk-size)
+- APK体积会影响程序加载速度，内存占用，电量消耗
+    - APK结构
+        - META-INF，签名相关文件
+        - assets
+        - lib，不同架构SO库等
+        - res
+        - resources.arsc（被编译的资源）
+        - classes.dex
+            - 被虚拟机所理解的Dex文件
+        - AndroidManifest.xml
+    - 移除无用的资源
+        - lint?
+    - 减少lib中的不必要的资源
+    - 只用一个密度的图片资源
+    - 可以用Drawable来替代图片资源，自己绘制，或者用类似RoundView的自意义View更好
+    - 复用资源
+    - 压缩图片
+    - Webp
+    - 减少代码
+        - 避免枚举，（A single enum can add about 1.0 to 1.4 KB of size to your app's classes.dex file.）
+    - App bundles（增量更新），但是只有google play能用，也可以根据屏幕密度，语言,[ABI](https://developer.android.com/ndk/guides/abis.html?hl=zh-cn)来分包
+    - Proguard
+        - shrink （裁剪）
+        - optimize （优化）
+        - obfuscate （混淆）
+            - 就是把资源和文件名字弄短，来减少文件体积
+    - Android Studio 3.0推出新Dex编译器D8,新混淆工具R8
+    - 压缩Dex
+    - Library压缩
+        -  XZ或者7-zip压缩
+    - 第三方参考库
+        - Redux（Facebook）
+
 # Hybrid
 - Fultter
 - Rn
