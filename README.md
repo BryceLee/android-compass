@@ -6,86 +6,18 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - 操作系统
     - 多进程
     - 多线程
-- 算法和数据结构 [Algorithms]
+- 算法和数据结构 
+    - [Algorithms]
     - HaspMap
     - LinkedList
     - 快排
     - 最大堆
-- 计算机网络
-    - 网络协议
-        #### 这里需要注意RFC文档， 它是用来记录互联网规范、协议、过程等的标准文件。基本的互联网通信协议都有在RFC文件内详细说明。
-        #### 请求意见稿（英语：Request For Comments，缩写：RFC）是由互联网工程任务组（IETF）发布的一系列备忘录。文件收集了有关互联网相关信息，以及UNIX和互联网社群的软件文件，以编号排定。当前RFC文件是由互联网协会（ISOC）赞助发行。
-        - Http
-            - The Hypertext Transfer Protocol (HTTP) is a stateless application-
-   level protocol for distributed, collaborative, hypertext information
-   systems.  This document provides an overview of HTTP architecture and
-   its associated terminology, defines the "http" and "https" Uniform
-   Resource Identifier (URI) schemes, defines the HTTP/1.1 message
-   syntax and parsing requirements, and describes related security
-   concerns for implementations.[(FROM FRF74230)](https://tools.ietf.org/html/rfc7230),
-            - 超文本传输协议是为分布式的，协作的，超文本信息系统而生的无状态，应用层的协议。他采用request/response的方式来进行客户端和服务器之间的通信。
-            - 请求和响应由请求行(状态行)+头部+请求体(响应体)构成。
-            - 用ABDF规范来HTTP的形式
-                - 扩充巴科斯-瑙尔范式[(ABNF)](https://zh.wikipedia.org/wiki/%E6%89%A9%E5%85%85%E5%B7%B4%E7%A7%91%E6%96%AF%E8%8C%83%E5%BC%8F)是一种基于巴科斯-瑙尔范式（BNF）的元语言，但它有自己的语法和派生规则。描述一种作为双向通信协议语言的形式系统.
-                - 操作符（定义语法）
-                    - 空白字符SP
-                    - 选择/
-                    - 值范围%c##-##
-                    - 不定量重复a*b
-                    - 可选字符[]:
-                    - [message-body]
-                - 核心规则
-                    - CR (换行)
-                    - LF（换行）
-                    - HTAB （横向字表符号）
-                - ABDF描述的HTTP协议格式：
-                   
-                    - HTTP-meaage=startline *(header-field CRLF)CRLF[message-body]
-                        - start-line = method SP request/response request-target SP HTTP-version CRLF
-                        - status-line = HTTP-version SP status-code SP reason-phrase CRLF 
-                        - filed-value=*(field-content/obs-fold)
-                        - message-body=*OCTET
+- [计算机网络相关][networkProtocol]
+   
 
+## 程序设计相关
+- [设计思想，设计原则，设计模式][design]
 
-        - TCP/UDP
-        - QUIC
-    - 学习工具WireShark
-
-
-## 设计思想
-- 什么是控制反转？
-    - 可以这么理解，对象的创建交给一个“仓库”来管理（这里所谓的反转），而不是使用方自行创建（这就是正转）
-    - 实现方式：
-        - DI(Depency Injection),利用这些思想的库：Dagger2,Spring
-        - Dependency Lookup
-    - Thanks:
-        - [IOC1](http://sishuok.com/forum/blogPost/list/2427.html)
-        - [IOC2](https://www.cnblogs.com/maxstack/p/7516097.html)
-- AOP
-## 设计原则
-![](https://cdn-images-1.medium.com/max/1600/1*ykdDqm06KRI1XDtv34b2BQ.png)
-- 单一职能原则
-    - 一个类只有一个使其改变的原因（我的理解是一个类一个功能）
-    - 优点：降低耦合；代码易理解和维护；
-- 开闭原则
-    - 软件实体（类，模块，方法）应该开放扩张，不允许修改
-    - 优点：更易维护和复用，更高健壮性
-- 里氏替换原则（Liskov Substitution Principle）
-    - 指的是对象被其子类的实例替换，不会影响程序正常运行。
-    - 优点：更高的复用性
-- 接口隔离原则
-    - 多个专用接口比一个通用接口好
-    - 优点：不必实现不需要的接口方法，接口方法专用；更易于重构
-- 依赖倒置（Dnpendency Inversion Principle）
-    - 指的是应该用抽象（接口）去替代高层次模块对低层次模块的依赖。
-    - 优点：解耦合
-    - 我倒觉得叫依赖转移更贴切，Dependency Transfer Principle，其实并没有真的倒转什么，叫依赖倒置反而让人觉得不太好理解。或者可以称之为面向接口编程。
-- 迪米特法则
-    - 
-- Thanks: [SOLID Principles : The Definitive Guide](https://android.jlelse.eu/solid-principles-the-definitive-guide-75e30a284dea)
-## 设计模式
-- 装饰者模式
-    - [link](https://www.jianshu.com/p/c26b9b4a9d9e)
 ## Language
 - Java
     - [内存模型](https://blog.csdn.net/javazejian/article/details/72772461#comments)
@@ -172,6 +104,7 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - PMS
 ## Handler
     - 原理:ThreadLocal可以在每个线程中存储数据并且获取数据，要使用Handler，线程必须拥有Looper，当前一开始时没有Looper的，Looper被创建存储在ThreadLocal中。 消息被存储在MessageQueue这个单链表中，Looper无限的从队列中取消息来处理。ActivityThread就是UI线程，ActivityThread被创建的时候就初始化了Looper，这是UI线程默认可以使用Handler的原因。
+    - Handler为什么会持有外部的引用？
 ## Permissions
 - [overview](https://developer.android.com/guide/topics/permissions/overview)
 ## Binder
@@ -237,25 +170,43 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - Glide
 - Piccaso
 - Universal-image-loader
-- [If you want to compare them all,you can see this project](https://github.com/liaohuqiu/fresco-demo-for-gradle)
+    - [If you want to compare them all,you can see this project](https://github.com/liaohuqiu/fresco-demo-for-gradle)
 
 ## Video Player
 - [ExoPlayer](https://github.com/google/ExoPlayer)
 - IjkPlayer
-    - [apply() vs commit()](https://www.jianshu.com/p/3b2ac6201b33)
+    
 # 数据加密
+- [EncriptSharedPreferences](https://developer.android.com/jetpack/androidx/releases/security):provides an implementation of SharedPreferences that automatically encrypts/decrypts all keys and values
 # Optimize
 - Tips
     - [Tips](https://developer.android.com/training/articles/perf-tips)
-## UI渲染
-- Layout
+## UI优化
+- View复用
+    - View Cache Pool
+- Layout更小的开销
     - ViewStub
     - Inclide
     - Merge
-    - Contractlayout
-- Bitmap
-    - 8888
-    - 565
+    - Contractlayout替代RelativeLayout,LinearLayout
+- 不要重复设置背景
+## 存储优化
+- SharePreference
+    - 原理
+    - [apply() vs commit()](https://www.jianshu.com/p/3b2ac6201b33)
+    - MMKV替代SharedPreference
+        - Writing random int for 1000 times, we get this chart:
+        ![](https://github.com/Tencent/MMKV/wiki/assets/profile_android_mini.jpg)
+        - [MMKV link](https://github.com/Tencent/MMKV)(api 16)
+- JSON解析 
+    - ANDROID JSON
+    - Gson
+    - FastJson （最快）
+    - MSON
+- 序列化
+    - Serializable
+    - Parcelable
+    - Seria
 ## 卡顿优化
 - [Slow rendering](https://developer.android.com/topic/performance/vitals/render#top_of_page)
 ### 卡顿查找工具
@@ -291,6 +242,9 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - Android Profiler
     - https://blog.csdn.net/niubitianping/article/details/72617864
 ### 内存优化
+- Bitmap
+    - 8888
+    - 565
 - 内存泄露容易出现的场景
     - Context泄漏（被某个静态类引用，比如单例）
     - 匿名内部类
@@ -314,7 +268,7 @@ https://www.jianshu.com/p/ac00e370f83d
         - 核心思路：对Dalvik做抑制GC回收，空间换时间；
 - ANR
 - Android GC(和JavaGC有一些区别)
-### 减少应用体积
+### 减少APK体积
 - [offical docs](https://developer.android.com/topic/performance/reduce-apk-size)
 - APK体积会影响程序加载速度，内存占用，电量消耗
     - APK结构
@@ -327,7 +281,8 @@ https://www.jianshu.com/p/ac00e370f83d
             - 被虚拟机所理解的Dex文件
         - AndroidManifest.xml
     - 移除无用的资源
-        - lint?
+        - Lint
+            - Lint 是Android Studio 提供的 代码扫描分析工具，它可以帮助我们发现代码结构/质量问题，同时提供一些解决方案。
     - 减少lib中的不必要的资源
     - 只用一个密度的图片资源
     - 可以用Drawable来替代图片资源，自己绘制，或者用类似RoundView的自意义View更好
@@ -359,6 +314,7 @@ https://www.jianshu.com/p/ac00e370f83d
             - 使用@JavaScriptInterface来绑定交互方法
         -  js用这样的代码调用native:window.WebViewJavascriptBridge.callHandler...
             - [WebViewJavascriptBridge](https://blog.csdn.net/sk719887916/article/details/47189607)
+        - [WebView性能、体验分析与优化](https://tech.meituan.com/2017/06/09/webviewperf.html)
 - links
     - [Flutter 要全平台制霸？我看悬](https://mp.weixin.qq.com/s/VnnhurJ03vEb75uB2PS6Wg)
 ## Route
@@ -391,8 +347,19 @@ https://www.jianshu.com/p/ac00e370f83d
 ## NDK
 - NDK-Build
 - CMake
+# 程序执行重要概念
+## Android Runtime（缩写为ART）
+- 是一种在Android操作系统上的运行环境，由Google公司研发，并在2013年作为Android 4.4系统中的一项测试功能正式对外发布，在Android 5.0及后续Android版本中作为正式的运行时库取代了以往的Dalvik虚拟机。ART能够把应用程序的字节码转换为机器码，是Android所使用的一种新的虚拟机。它与Dalvik的主要不同在于：Dalvik采用的是JIT技术，而ART采用Ahead-of-time（AOT）技术。ART同时也改善了性能、垃圾回收（Garbage Collection）、应用程序出错以及性能分析。（[From:wiki](https://zh.wikipedia.org/wiki/Android_Runtime)）
+## Dalvik
+- Dalvik虚拟机，是Google等厂商合作开发的Android移动设备平台的核心组成部分之一。它可以支持已转换为.dex（即“Dalvik Executable”）格式的Java应用程序的运行。.dex格式是专为Dalvik设计的一种压缩格式，适合内存和处理器速度有限的系统。Dalvik由Dan Bornstein编写的，名字来源于他的祖先曾经居住过的小渔村达尔维克（Dalvík），位于冰岛埃亚峡湾。
 
+- 大多数虚拟机包括JVM都是一种堆栈机器，而Dalvik虚拟机则是寄存器机。两种架构各有优劣，一般而言，基于堆栈的机器需要更多指令，而基于寄存器的机器指令更长。
 
+从Android 5.0版起，Android Runtime（ART）取代Dalvik成为系统内默认虚拟机
+## bytecode
+- 字节码（英语：Bytecode）通常指的是已经经过编译，但与特定机器代码无关，需要解释器转译后才能成为机器代码的中间代码。字节码通常不像源码一样可以让人阅读，而是编码后的数值常量、引用、指令等构成的序列。
+
+- 字节码主要为了实现特定软件运行和软件环境、与硬件环境无关。字节码的实现方式是通过编译器和虚拟机。编译器将源码编译成字节码，特定平台上的虚拟机将字节码转译为可以直接运行的指令。字节码的典型应用为Java bytecode。
 # Android Studio
 - [adb#shellcommands](https://developer.android.com/studio/command-line/adb#shellcommands)
 ## App Version Update
@@ -495,3 +462,7 @@ You can upload your apk ,and you get a qrcode that someone can scan and download
 - [Linux环境下进程的CPU占用率](http://www.samirchen.com/linux-cpu-performance/)
 - [Android 中高级工程师面试复习大纲](https://juejin.im/post/5cdd7a94f265da03775c781a)
 - [RFC wiki](https://zh.wikipedia.org/wiki/RFC)
+- [Dalvik wiki](https://zh.wikipedia.org/wiki/Dalvik%E8%99%9A%E6%8B%9F%E6%9C%BA)
+
+[design]:https://github.com/BryceLee/android-compass/blob/master/design.md
+[networkProtocol]:https://github.com/BryceLee/android-compass/blob/master/networkProtocol.md
