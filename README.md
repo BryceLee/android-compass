@@ -12,6 +12,7 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - LinkedList
     - 快排
     - 最大堆
+    - 二分法
 - [计算机网络相关][networkProtocol]
    
 
@@ -30,12 +31,49 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - C
     - C入门记录
 - C++
+## Executor(Interface),ThreadPoolExecutor(Impl)
+- 构造参数说明：
+    - coolPoolsize
+        - 默认情况下一直活着，除非设置ThreadPoolExecutor的allowCoreThreadTimeout=true,核心线程闲置超时也会被终止
+    - maxinumPoolsize
+        - 最大线程数，新任务超过最大值就要等待
+    - keepAliveTime
+        - 线程闲置保活时间
+    - unit
+        - keepAliveTime的单位
+    - workQueue:任务队列，存储runnable对象
+    - ThreadFactory  
+        - 创建线程
+- 参考AsyncTask参数配置：
+    - coolposize=cpucount+1
+    - maximumpoolsize=cpucount*2+1
+    - 核心线程无超时机制，非核心线程超时事件1秒
+    - 任务队列容量128
+- 分类
+        - FixedThreadPool
+            - Executors.newFixedThreadPool()
+            - 固定核心线程，全是核心线程，无超时机制，无任务队列上线 
+            - 适合需要快速响应的任务
+        - Executors.newCachedThreadPool()
+            - 全是非核心线程，最大线程数Interget.Max_Value,60秒超时机制
+            - 无法存储任务，有新任务立即执行
+            - 适合执行大量耗时较少的任务（Retrofit?Rxjava?）
+        - Executors.newScheduledThreadPool()
+            - 核心线程固定，最大线程Inter.Max_Value
+            - 超时时间为0，非核心线程闲置会被立即回收
+            - 适合定时任务，具有周期性的任务
+        - Executor.SingleThreadExecutor()
+            - 只有一个核心线程
+            - 单线程的任务
 ## Gralde
 - Groovy
 - [命令](https://blog.csdn.net/qq402164452/article/details/70207279)
 # Android Basis
 ## Android DataStructure
 - SpareArray
+## View 
+- [View的事件分发](https://blog.csdn.net/u010983881/article/details/78905598)
+- ![](https://itimetraveler.github.io/gallery/android-view/1520093523-0.png)
 ## Android动画
 - View Animation：作用在View对象上，
   - tween Animation:写出开始和结束状态，系统会补充中间过程。有translate,scale,rotate,alpha四种效果动画。
@@ -276,6 +314,10 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 https://www.jianshu.com/p/ac00e370f83d
 - [offical docs](https://developer.android.com/studio/profile/memory-profiler?hl=zh-cn)
 - [leakcanary](https://github.com/square/leakcanary)
+    - 1.使用弱引用监听Acitvity或者Fragmmnt的销毁，也可以自己手动调用API去监控一个View
+    - 2.如果弱引用没有被消除，5秒后运行GC，如果实例还没被消除就是潜在的泄漏
+    - 3.当潜在的泄漏数量达到阀值，就dumps Javaheap的引用信息到.hprof文件中，app显示的时候阀值是5，否则是1
+    - 4.LeakCanary会找到一个实例的引用链，从实例到GCROOT最近的强引用一般是原因，但是还是得看情况分析
 ### 启动优化
 - [android official docs:performance/vitals/launch-time](https://developer.android.com/topic/performance/vitals/launch-time#profiling)
 - [Android App 冷启动优化方案](https://juejin.im/post/5aec28bb6fb9a07ac90d13dc)
@@ -283,6 +325,16 @@ https://www.jianshu.com/p/ac00e370f83d
         - 核心思路：对Dalvik做抑制GC回收，空间换时间；
 - ANR
 - Android GC(和JavaGC有一些区别)
+- [空闲队列加载](https://blog.csdn.net/tencent_bugly/article/details/78395717)
+```
+Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+               //do something
+                return false;
+            }
+        });
+```
 ### 减少APK体积
 - [offical docs](https://developer.android.com/topic/performance/reduce-apk-size)
 - APK体积会影响程序加载速度，内存占用，电量消耗
@@ -341,6 +393,7 @@ https://www.jianshu.com/p/ac00e370f83d
 
 ## Communication
 - [Eventbus](https://github.com/greenrobot/EventBus)
+- 原理：
 - Rxbus
 ## Apk
 - 签名校验

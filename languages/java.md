@@ -14,11 +14,11 @@
 - 参考AsyncTask参数配置：
     - coolposize=cpucount+1
     - maximumpoolsize=cpucount*2+1
-    - 核心线程无超市机制，非核心线程超时事件1秒
+    - 核心线程无超时机制，非核心线程超时事件1秒
     - 任务队列容量128
 - 分类
-    - FixedThreadPool
-        - Executors.newFixedThreadPool()
+        - FixedThreadPool
+            - Executors.newFixedThreadPool()
             - 固定核心线程，全是核心线程，无超时机制，无任务队列上线 
             - 适合需要快速响应的任务
         - Executors.newCachedThreadPool()
@@ -27,7 +27,7 @@
             - 适合执行大量耗时较少的任务（Retrofit?Rxjava?）
         - Executors.newScheduledThreadPool()
             - 核心线程固定，最大线程Inter.Max_Value
-            - 超时事件为0，非核心线程闲置会被立即回收
+            - 超时时间为0，非核心线程闲置会被立即回收
             - 适合定时任务，具有周期性的任务
         - Executor.SingleThreadExecutor()
             - 只有一个核心线程
