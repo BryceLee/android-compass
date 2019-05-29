@@ -103,8 +103,20 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - AMS
     - PMS
 ## Handler
-    - 原理:ThreadLocal可以在每个线程中存储数据并且获取数据，要使用Handler，线程必须拥有Looper，当前一开始时没有Looper的，Looper被创建存储在ThreadLocal中。 消息被存储在MessageQueue这个单链表中，Looper无限的从队列中取消息来处理。ActivityThread就是UI线程，ActivityThread被创建的时候就初始化了Looper，这是UI线程默认可以使用Handler的原因。
-    - Handler为什么会持有外部的引用？
+- 原理:ThreadLocal可以在每个线程中存储数据并且获取数据，要使用Handler，线程必须拥有Looper，当前一开始时没有Looper的，Looper被创建存储在ThreadLocal中。 消息被存储在MessageQueue这个单链表中，Looper无限的从队列中取消息来处理。ActivityThread就是UI线程，ActivityThread被创建的时候就初始化了Looper，这是UI线程默认可以使用Handler的原因。
+    - Handler为什么会持有外部的引用：
+        - Message会持有Handler的 引用，由于Java的特性，内部类会持有外部类的引用，使得Activity会被Handler持有，这样就可能导致Activity泄露。
+        - Handler sendMessage()方法会调用enqueueMeaage(..)
+
+    ```
+    private boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMillis) {
+        msg.target = this;//msg内部持有了Handler的引用
+        if (mAsynchronous) {
+            msg.setAsynchronous(true);
+        }
+        return queue.enqueueMessage(msg, uptimeMillis);
+    }
+        ```
 ## Permissions
 - [overview](https://developer.android.com/guide/topics/permissions/overview)
 ## Binder
@@ -179,6 +191,9 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 # 数据加密
 - [EncriptSharedPreferences](https://developer.android.com/jetpack/androidx/releases/security):provides an implementation of SharedPreferences that automatically encrypts/decrypts all keys and values
 # Optimize
+- ANR
+    - UI线程5秒
+    - Service10秒
 - Tips
     - [Tips](https://developer.android.com/training/articles/perf-tips)
 ## UI优化
