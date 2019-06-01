@@ -1,0 +1,38 @@
+### 减少APK体积
+- [offical docs](https://developer.android.com/topic/performance/reduce-apk-size)
+- APK体积会影响程序加载速度，内存占用，电量消耗
+    - APK结构
+        - META-INF，签名相关文件
+        - assets
+        - lib，不同架构SO库等
+        - res
+        - resources.arsc（被编译的资源）
+        - classes.dex
+            - 被虚拟机所理解的Dex文件
+        - AndroidManifest.xml
+    - 移除无用的资源
+        - Lint
+            - Lint 是Android Studio 提供的 代码扫描分析工具，它可以帮助我们发现代码结构/质量问题，同时提供一些解决方案。
+    - 减少lib中的不必要的资源
+    - 只用一个密度的图片资源
+    - 可以用Drawable来替代图片资源，自己绘制，或者用类似RoundView的自意义View更好
+    - 复用资源
+    - 压缩图片
+    - Webp
+    - AndResGuard混淆资源
+    - 减少代码
+        - 避免枚举，（A single enum can add about 1.0 to 1.4 KB of size to your app's classes.dex file.）
+    - App bundles（增量更新），但是只有google play能用，也可以根据屏幕密度，语言,[ABI](https://developer.android.com/ndk/guides/abis.html?hl=zh-cn)来分包
+    - Proguard
+        - shrink （裁剪）
+        - optimize （优化）
+        - obfuscate （混淆）
+            - 就是把资源和文件名字弄短，来减少文件体积
+    - Android Studio 3.0推出新Dex编译器D8,新混淆工具R8
+    - 压缩Dex
+    - Library压缩
+        -  XZ或者7-zip压缩
+    - 第三方参考库
+        - Redux（Facebook）
+## Thanks:
+- [Android App包瘦身优化实践](https://tech.meituan.com/2017/04/07/android-shrink-overall-solution.html)

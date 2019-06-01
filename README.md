@@ -8,7 +8,7 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - 多线程
 - 算法和数据结构 
     - [Algorithms]
-    - HaspMap
+    - [HaspMap](https://github.com/BryceLee/algorithms-learning/blob/master/data-structure/java/hashmap.md)
     - LinkedList
     - 快排
     - 最大堆
@@ -65,7 +65,20 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
         - Executor.SingleThreadExecutor()
             - 只有一个核心线程
             - 单线程的任务
+## Android Studio
+- 可以去https://www.androiddevtools.cn/下载旧版本
+- Mac环境下：
+    - 打开dmg文件，把AndroidStudio移动Applicaiton下，（正常安装布局，本地已经有As会弹出是否覆盖选项，选择keep both）
+    - 默认是AndroidStudio 2，可以自行更名
+    - 我这边选择不导入旧配置，不确定选择旧配置是否会有影响，所查资料也是建议用全新的配置，可以在隐藏文件~Library/Application Support看到新的As版本信息
+### keymap in common use
+- Back
+    - 返回上一个编辑的地方
+- Move Caret to Line Start（把光标移动到行首）
+- Move Caret to Line End(把光标移动到行尾)
 ## Gralde
+- [Gradle和Plugin对应版本要求](https://developer.android.com/studio/releases/gradle-plugin.html#updating-gradle)
+
 - Groovy
 - [命令](https://blog.csdn.net/qq402164452/article/details/70207279)
 # Android Basis
@@ -108,16 +121,24 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - onPause()轻量存储
     - onStop()重量回收，但是不宜太耗时
     - onDestroy()回收
-- Launchmode
-    - standard
-    - 每次都创建
-    - singleTop
-    - 事例在栈顶，就复用，否则重新创建。
-    - singleTask
-    - 栈内存在实例就复用，但是会清空在事例之上的所有其他实例；不存在就创建
-    - 不存在所属任务栈，先创建任务栈再创建事例，并且入栈
-    - singleInstance
-    - 只能独立的存在一个任务栈;如果实例存在直接提到栈顶，这时候会调用
+- android:exported
+    - 设置Activity是否能够被其他应用的组建唤起，”true“为允许，“false”为不允许
+    - 如果你设置了"intent filter"就不应该设置exported=false，否则会抛出ActivityNotFoundException
+    - 默认是false
+    - 另一个属性也可以显示Activity被外部实体访问：permission
+- android:hardwareAccelerated
+    - Activity是否开启硬件加速渲染
+- android:launchMode
+    - Launchmode
+        - standard
+            - 每次都创建
+        - singleTop
+            - 实例在栈顶，就复用，否则重新创建。
+        - singleTask
+            - 栈内存在实例就复用，但是会清空在事例之上的所有其他实例；不存在就创建
+            - 不存在所属任务栈，先创建任务栈再创建事例，并且入栈
+        - singleInstance
+            - 只能独立的存在一个任务栈;如果实例存在直接提到栈顶，这时候会调用
     ```
     如果实例还没有被创建，就走正常的Activity正常周期；
     启动模式生效时，本身在栈顶，所走的生命周期如下：
@@ -335,42 +356,9 @@ Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
             }
         });
 ```
-### 减少APK体积
-- [offical docs](https://developer.android.com/topic/performance/reduce-apk-size)
-- APK体积会影响程序加载速度，内存占用，电量消耗
-    - APK结构
-        - META-INF，签名相关文件
-        - assets
-        - lib，不同架构SO库等
-        - res
-        - resources.arsc（被编译的资源）
-        - classes.dex
-            - 被虚拟机所理解的Dex文件
-        - AndroidManifest.xml
-    - 移除无用的资源
-        - Lint
-            - Lint 是Android Studio 提供的 代码扫描分析工具，它可以帮助我们发现代码结构/质量问题，同时提供一些解决方案。
-    - 减少lib中的不必要的资源
-    - 只用一个密度的图片资源
-    - 可以用Drawable来替代图片资源，自己绘制，或者用类似RoundView的自意义View更好
-    - 复用资源
-    - 压缩图片
-    - Webp
-    - 减少代码
-        - 避免枚举，（A single enum can add about 1.0 to 1.4 KB of size to your app's classes.dex file.）
-    - App bundles（增量更新），但是只有google play能用，也可以根据屏幕密度，语言,[ABI](https://developer.android.com/ndk/guides/abis.html?hl=zh-cn)来分包
-    - Proguard
-        - shrink （裁剪）
-        - optimize （优化）
-        - obfuscate （混淆）
-            - 就是把资源和文件名字弄短，来减少文件体积
-    - Android Studio 3.0推出新Dex编译器D8,新混淆工具R8
-    - 压缩Dex
-    - Library压缩
-        -  XZ或者7-zip压缩
-    - 第三方参考库
-        - Redux（Facebook）
+### [减少APK体积][reduce_apk_size]
 
+https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extension#heading-14
 # Hybrid
 - Fultter
 - Rn
@@ -534,3 +522,4 @@ You can upload your apk ,and you get a qrcode that someone can scan and download
 
 [design]:https://github.com/BryceLee/android-compass/blob/master/design.md
 [networkProtocol]:https://github.com/BryceLee/android-compass/blob/master/networkProtocol.md
+[reduce_apk_size]:https://github.com/BryceLee/android-compass/blob/master/optimize/reduce_apk_size.md
