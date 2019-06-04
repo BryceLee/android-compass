@@ -296,6 +296,8 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
         - Naoscope(Uber)，性能损耗比较小
     - Sample:
         - systrace
+    - TraceView已经被废弃，从Android Studio3.2开始建议用CPU Profiler来替代。
+    - Android Deviec Monitor在Android Studio3.1被废弃,在Android Studio3.2被移除.
     - Android Studio Profiler(降低开发门槛)
         - Sample Java Methods(类似traceview的sample类型)
         - Trace Java Methods(类似traceview的instrument类型)
