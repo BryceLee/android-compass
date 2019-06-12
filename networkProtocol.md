@@ -41,3 +41,19 @@
         ##### 开放式系统互联通信参考模型（英语：Open System Interconnection Reference Model，缩写为 OSI），简称为OSI模型（OSI model），一种概念模型，由国际标准化组织提出，一个试图使各种计算机在世界范围内互连为网络的标准框架。定义于ISO/IEC 7498-1。
         - ![](https://img-blog.csdn.net/20170502205122263)
     - 学习工具WireShark
+    - Web架构关键属性
+        - Performance
+            - Network Performance
+            - User-perceived Performance
+            - Network Efficiency
+                - Cache（更少的交互次数）
+                - CDN（更短的传输路径）
+        - Scalability（可伸缩性）
+        - Simplicity
+        - Modifiability(可修改性)
+            - Evolvability（可进化性）
+            - Customizability（可定制性）：定制提供服务，不对常规用户产生影响
+            - Configurability（可配置性）：应用部署后可以通过修改配置来提供新的功能
+            - Reusability（可重用性）：组建可以不做修改在其他应用中使用
+# Thanks
+- https://github.com/russelltao/geektime-webprotocol

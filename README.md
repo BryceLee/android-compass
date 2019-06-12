@@ -57,7 +57,7 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
         - Executors.newCachedThreadPool()
             - 全是非核心线程，最大线程数Interget.Max_Value,60秒超时机制
             - 无法存储任务，有新任务立即执行
-            - 适合执行大量耗时较少的任务（Retrofit?Rxjava?）
+            - 适合执行大量耗时较少的任务（Retrofit,Rxjava）
         - Executors.newScheduledThreadPool()
             - 核心线程固定，最大线程Inter.Max_Value
             - 超时时间为0，非核心线程闲置会被立即回收
@@ -178,7 +178,6 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
         ```
 ## Permissions
 - [overview](https://developer.android.com/guide/topics/permissions/overview)
-## Binder
 ### View
 - View位置坐标由以ViewGroup的左上角为顶点的坐标系来决定的，向右是x轴正方形，向下是y轴
 正方向；
@@ -225,7 +224,10 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 ## Network
 - Okhttp
 - Retrofit
-    - [多个BaseUrl，一个Retrofit实例](https://www.jianshu.com/p/2919bdb8d09a)
+    - [多个BaseUrl，一个Retrofit实例](http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2017/0726/8267.html)
+    - 这里我不想接入上面的库，但是[HostSelectionInterceptor.java
+](https://gist.github.com/swankjesse/8571a8207a5815cca1fb)会影响全路径的请求，可以在上面的基础上改一下：
+    - https://blog.csdn.net/jason_996/article/details/78659019
 - Volley
 - Gson
 - FastJson
@@ -251,9 +253,16 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - [EncriptSharedPreferences](https://developer.android.com/jetpack/androidx/releases/security):provides an implementation of SharedPreferences that automatically encrypts/decrypts all keys and values
 # Optimize
 - ANR
-    - UI线程5秒
-    - Service10秒
-- Tips
+    - common issues
+        - UI线程5秒
+        - BroadCastRecevier5秒
+        - Service10秒
+    - dignose
+        - Strict Mode
+            - Using StrictMode helps you find accidental I/O operations on the main thread while you’re developing your app. You can use StrictMode at the application or activity level
+            - StrictMode is a developer tool which detects things you might be doing by accident and brings them to your attention so you can fix them.
+        - 生成.trace文件，进一步分析
+        - Tips
     - [Tips](https://developer.android.com/training/articles/perf-tips)
 ## UI优化
 - View复用
@@ -341,23 +350,8 @@ https://www.jianshu.com/p/ac00e370f83d
     - 2.如果弱引用没有被消除，5秒后运行GC，如果实例还没被消除就是潜在的泄漏
     - 3.当潜在的泄漏数量达到阀值，就dumps Javaheap的引用信息到.hprof文件中，app显示的时候阀值是5，否则是1
     - 4.LeakCanary会找到一个实例的引用链，从实例到GCROOT最近的强引用一般是原因，但是还是得看情况分析
-### 启动优化
-- [android official docs:performance/vitals/launch-time](https://developer.android.com/topic/performance/vitals/launch-time#profiling)
-- [Android App 冷启动优化方案](https://juejin.im/post/5aec28bb6fb9a07ac90d13dc)
-- [支付宝 App 启动速度优化](https://mp.weixin.qq.com/s/dATfVyGQRTQ9KV1L3RueUQ)(作者: 入弦 | 来源：公众号 mPaaS  )
-        - 核心思路：对Dalvik做抑制GC回收，空间换时间；
-- ANR
-- Android GC(和JavaGC有一些区别)
-- [空闲队列加载](https://blog.csdn.net/tencent_bugly/article/details/78395717)
-```
-Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
-            @Override
-            public boolean queueIdle() {
-               //do something
-                return false;
-            }
-        });
-```
+### [启动优化][app_launcher_optimize]
+
 ### [减少APK体积][reduce_apk_size]
 
 https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extension#heading-14
@@ -389,49 +383,34 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
 - 签名校验
     - jarsigner -certs -verbose -verify xxx.apk ([apk是否已经签名？](https://blog.csdn.net/qq_36005519/article/details/53519481))
 
-        
-## JNI
-- 生成so流程
-    - 定义native方法
-    - javah生成头文件
-    - 写原生代码
-    - Android.mk
-    - Application.mk
-    - 生成so，ndk-build或者cmake
-- 引用
-    - 必须写和so中一样的native方法同样的包名，类名，方法名
-    - 配置gradle中设置ndk modulename 
-    - System.loadLibrary("modulename");
-## NDK
-- NDK-Build
-- CMake
-# 程序执行重要概念
-## Android Runtime（缩写为ART）
-- 是一种在Android操作系统上的运行环境，由Google公司研发，并在2013年作为Android 4.4系统中的一项测试功能正式对外发布，在Android 5.0及后续Android版本中作为正式的运行时库取代了以往的Dalvik虚拟机。ART能够把应用程序的字节码转换为机器码，是Android所使用的一种新的虚拟机。它与Dalvik的主要不同在于：Dalvik采用的是JIT技术，而ART采用Ahead-of-time（AOT）技术。ART同时也改善了性能、垃圾回收（Garbage Collection）、应用程序出错以及性能分析。（[From:wiki](https://zh.wikipedia.org/wiki/Android_Runtime)）
-## Dalvik
-- Dalvik虚拟机，是Google等厂商合作开发的Android移动设备平台的核心组成部分之一。它可以支持已转换为.dex（即“Dalvik Executable”）格式的Java应用程序的运行。.dex格式是专为Dalvik设计的一种压缩格式，适合内存和处理器速度有限的系统。Dalvik由Dan Bornstein编写的，名字来源于他的祖先曾经居住过的小渔村达尔维克（Dalvík），位于冰岛埃亚峡湾。
-
-- 大多数虚拟机包括JVM都是一种堆栈机器，而Dalvik虚拟机则是寄存器机。两种架构各有优劣，一般而言，基于堆栈的机器需要更多指令，而基于寄存器的机器指令更长。
-
-从Android 5.0版起，Android Runtime（ART）取代Dalvik成为系统内默认虚拟机
-## bytecode
-- 字节码（英语：Bytecode）通常指的是已经经过编译，但与特定机器代码无关，需要解释器转译后才能成为机器代码的中间代码。字节码通常不像源码一样可以让人阅读，而是编码后的数值常量、引用、指令等构成的序列。
-
-- 字节码主要为了实现特定软件运行和软件环境、与硬件环境无关。字节码的实现方式是通过编译器和虚拟机。编译器将源码编译成字节码，特定平台上的虚拟机将字节码转译为可以直接运行的指令。字节码的典型应用为Java bytecode。
 # Android Studio
 - [adb#shellcommands](https://developer.android.com/studio/command-line/adb#shellcommands)
 ## App Version Update
 - [Bugly](https://bugly.qq.com/docs/introduction/app-upgrade-introduction)
     - [Buyly Summary](https://www.jianshu.com/p/168feeea2363)
-
-## Bult-in Test
+## Test
+### Junit4(local unit test)
+    - Junit is the most popular and widely-used unit testing framework for java.
+    - a test method begins with the @Test annotation and contains the code to exercise and verify a single functionality in the component that you want to test.
+    - if you meet runtimeException--Error: "Method ... not mocked",you should add some configuration,because you run a test that calls an API from the Android SDK that you do not mock.
+    ```
+    android {
+    // ...
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
+}
+    ```
+- 【Chinese Blog About Unit Test】（https://www.jianshu.com/p/aa51a3e007e2）
+### 
+## Built-in Test
 - Auto Pack
     - [Jenkins](https://jenkins.io/doc/)
     - [Chinese Introduction](https://blog.csdn.net/ATangSir/article/details/71699403)
     - 注意点:
         - 关联Git仓库的时候要添加证书，方式一，仓库HTTP地址+仓库账号密码；方式二，本地创建jenkins SSH，jenins上配置私钥，仓库里配置共钥。[说明](https://www.cnblogs.com/liyuanhong/p/5762981.html)
         - 一定要在Global Tool Configuration（全局工具配置）里配置Git,Gradle信息，前者不配置，拉不到数据，后者不配置无法构建apk
-You can upload your apk ,and you get a qrcode that someone can scan and download apk for test it.I think Pgyer is better because it can keep more valid apk history.
+- You can upload your apk ,and you get a qrcode that someone can scan and download apk for test it.I think Pgyer is better because it can keep more valid upload apk history.
 - [Pgyer](https://www.pgyer.com/)
 - [Fir](https://fir.im/)
 ## Proguard
@@ -444,7 +423,7 @@ You can upload your apk ,and you get a qrcode that someone can scan and download
 - [Easemobe](http://www.easemob.com/product/im)（环信IM） 
     - [Customer Service](http://docs.easemob.com/cs/300visitoraccess/androidsdk)(客服云)
 
-- [RongIM](https://www.rongcloud.cn/)(融云)
+- [RongIM](https://www.rongcloud.cn/)(融云)        
 
 ## Version Control Tools
 - [Git](https://git-scm.com/book/en/v2)
@@ -470,6 +449,47 @@ You can upload your apk ,and you get a qrcode that someone can scan and download
     - 必须设置
 - Bugtags
 
+## JNI
+- 目的
+    - 交Java层而言，优化性能，对抗逆向
+- 生成so流程
+    - 定义native方法
+    - javah生成头文件
+    - 写原生代码
+    - Android.mk
+    - Application.mk
+    - 生成so，ndk-build或者cmake
+- 引用
+    - 必须写和so中一样的native方法同样的包名，类名，方法名
+    - 配置gradle中设置ndk modulename 
+    - System.loadLibrary("modulename");
+## NDK
+- NDK-Build
+- CMake
+# Android 程序执行重要概念
+## Dalvik
+- Dalvik虚拟机，是Google等厂商合作开发的Android移动设备平台的核心组成部分之一。它可以支持已转换为.dex（即“Dalvik Executable”）格式的Java应用程序的运行。.dex格式是专为Dalvik设计的一种压缩格式，适合内存和处理器速度有限的系统。Dalvik由Dan Bornstein编写的，名字来源于他的祖先曾经居住过的小渔村达尔维克（Dalvík），位于冰岛埃亚峡湾。
+
+- 大多数虚拟机包括JVM都是一种堆栈机器，而Dalvik虚拟机则是寄存器机。两种架构各有优劣，一般而言，基于堆栈的机器需要更多指令，而基于寄存器的机器指令更长。
+
+从Android 5.0版起，Android Runtime（ART）取代Dalvik成为系统内默认虚拟机
+## Android Runtime（缩写为ART）
+- 是一种在Android操作系统上的运行环境，由Google公司研发，并在2013年作为Android 4.4系统中的一项测试功能正式对外发布，在Android 5.0及后续Android版本中作为正式的运行时库取代了以往的Dalvik虚拟机。ART能够把应用程序的字节码转换为机器码，是Android所使用的一种新的虚拟机。它与Dalvik的主要不同在于：Dalvik采用的是JIT技术，而ART采用Ahead-of-time（AOT）技术。ART同时也改善了性能、垃圾回收（Garbage Collection）、应用程序出错以及性能分析。（[From:wiki](https://zh.wikipedia.org/wiki/Android_Runtime)）
+
+## bytecode
+- 字节码（英语：Bytecode）通常指的是已经经过编译，但与特定机器代码无关，需要解释器转译后才能成为机器代码的中间代码。字节码通常不像源码一样可以让人阅读，而是编码后的数值常量、引用、指令等构成的序列。
+
+- 字节码主要为了实现特定软件运行和软件环境、与硬件环境无关。字节码的实现方式是通过编译器和虚拟机。编译器将源码编译成字节码，特定平台上的虚拟机将字节码转译为可以直接运行的指令。字节码的典型应用为Java bytecode。
+## Android Native Librarys
+### Bionic
+## Core Library
+
+## Android 在内核中引入的特性
+### Binder
+- 负责进程间通信
+- Android中各种服务都注册到Binder中
+### ASHMem（匿名共享内存）
+- 这是一种允许进程间共享内存的机制
 ## Team management
 - Tower
 - Trello
@@ -510,8 +530,19 @@ You can upload your apk ,and you get a qrcode that someone can scan and download
 - Unix 网络编程
 ## Opengl ES
 - OpenGL ES 2 for Android
+# Hook
+- 翻译过来就是“钩子”，他的作用是截获进程对某个API的调用，使得执行流程指向我们期望的函数。
+- GOT/PL Hook
+    - GOT Hook
+        - 微信的Matrix开源库ELF Hook（性能监控）
+        - 爱奇艺开源的xHook
+        - Facebook PLT Hook
+- Trap Hook
+- Inline Hook
+# 架构
 # Thanks:
 - 《Android开发高手课》（张绍文）
+- 《最强Android书 架构大剖析》
 - 《Android开发艺术探索》
 - [面试时究竟在问些什么](http://blog.zhaiyifan.cn/2019/01/25/when-i-talk-about-interview/)
 - [Android APP 卡顿问题分析及解决方案](https://blog.csdn.net/zhanggang740/article/details/80199435)
@@ -525,3 +556,4 @@ You can upload your apk ,and you get a qrcode that someone can scan and download
 [design]:https://github.com/BryceLee/android-compass/blob/master/design.md
 [networkProtocol]:https://github.com/BryceLee/android-compass/blob/master/networkProtocol.md
 [reduce_apk_size]:https://github.com/BryceLee/android-compass/blob/master/optimize/reduce_apk_size.md
+[app_launcher_optimize]:https://github.com/BryceLee/android-compass/blob/master/optimize/app_launcher_optimize.md
