@@ -29,7 +29,7 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - Rxjava
 - Kotlin
 - C
-    - C入门记录
+    - [C入门记录](https://github.com/BryceLee/android-compass/blob/master/languages/c_primary.md)
 - C++
 ## Executor(Interface),ThreadPoolExecutor(Impl)
 - 构造参数说明：
@@ -50,8 +50,8 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - 核心线程无超时机制，非核心线程超时事件1秒
     - 任务队列容量128
 - 分类
-        - FixedThreadPool
-            - Executors.newFixedThreadPool()
+     - FixedThreadPool
+        - Executors.newFixedThreadPool()
             - 固定核心线程，全是核心线程，无超时机制，无任务队列上线 
             - 适合需要快速响应的任务
         - Executors.newCachedThreadPool()
@@ -353,6 +353,8 @@ https://www.jianshu.com/p/ac00e370f83d
 ### [启动优化][app_launcher_optimize]
 
 ### [减少APK体积][reduce_apk_size]
+### 线程优化
+- [官方文档](https://developer.android.com/topic/performance/threads)
 
 https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extension#heading-14
 # Hybrid

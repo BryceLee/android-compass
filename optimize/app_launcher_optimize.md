@@ -103,6 +103,17 @@ Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
         });
 ```
 ## [Generate Trace Logs by Instrumenting Your App](https://developer.android.com/studio/profile/generate-trace-logs)
+## 其他的优化思路
+### 最重要是先监测到具体的数据，由数据引导优化方向
+- 主线程耗时优化
+    - 异步
+- 线程优化
+    - 线程优化，减少CPU调用带来的波动；
+减少线程的数量，线程数量太多会相互竞争CPU资源；
+因此要有统一的线程池，并且根据设备性能来控制数量
+- GC优化
+- 业务流程优化
+    - 延迟执行非启动必须的业务
 # Thanks
 - // Starts recording a trace log with the name you provide. For example, the
 // following code tells the system to start recording a .trace file to the
