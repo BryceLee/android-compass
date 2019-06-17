@@ -372,6 +372,43 @@ public final class CarEntity_Module_MembersInjector implements MembersInjector<C
   }
 ```
 ### @Lazy
+- 每一个被@Lazy修饰的实例，在被调用的被计算值，虽有的使用都有同一个值；但是@Lazy不等于@Singleton
+- @Inject的被注入的时候就计算值，但是之后都用同一个值
+- @Provider是需要的计算，但是每次调用都新建一个值
+```
+//有一个这样的Module
+ @Module
+   final class CounterModule {
+     int next = 100;
+
+      @Provides Integer provideInteger() {
+       System.out.println("computing...");
+       return next++;
+     }
+   }
+```
+被修饰的@Lazy的值在同一个实例下，值是相等的。
+```
+final class LazyCounter {
+      @Inject Lazy<Integer> lazy;
+
+     void print() {
+       System.out.println("printing...");
+       System.out.println(lazy.get());
+       System.out.println(lazy.get());
+       System.out.println(lazy.get());
+     }
+   }
+   final class TestLazyCounters {
+      @Inject LazyCounter counter1;
+      @Inject LazyCounter counter2;
+
+     void print() {
+       counter1.print();
+       counter2.print();
+     }
+   }
+```
 ### @Binds
 可以使用@Binds来简化@Provides 一个接口的对象
 ``` 
@@ -397,3 +434,4 @@ public final class CarEntity_Module_MembersInjector implements MembersInjector<C
 - https://zhuanlan.zhihu.com/p/24454466
 - https://google.github.io/dagger/users-guide
 - [Dagger 2 : Component.Builder注解有什么用？](https://juejin.im/post/5a4cf2b2f265da430d586ace)
+- [@Lazy](https://dagger.dev/api/2.10/dagger/Lazy.html)
