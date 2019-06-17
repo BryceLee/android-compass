@@ -1,8 +1,18 @@
 ## Java注解基础：
 - Todo
+#### 准备
+```
+// Add Dagger dependencies
+dependencies {
+  compile 'com.google.dagger:dagger:2.x'
+  annotationProcessor 'com.google.dagger:dagger-compiler:2.x'
+}
+```
 #### 这里举一个电脑实体和零件实体的例子。
-- 在Dagger2的使用中,我们可以选用@Injector或者@Module来构造对象，等于告诉Dagger2，“来，等我需要的时候帮我new这个”，用@Injecor来标记，需要被赋值的声明，“来，我这里需要对象，快帮我new”。另一个重要注解是@Component，它就像一条网线，把Dagger2 new的对象，“传送到”到需要被声明的地方。
-- 如果用@Injector构造对象，我们来看下代码：
+### @Inject&@Module
+- 在Dagger2的使用中,我们可以选用@Inject或者@Module来构造对象，等于告诉Dagger2，
+“来，等我需要的时候帮我new这个”，用@Inject来标记，需要被赋值的声明，“来，我这里需要对象，快帮我new”。另一个重要注解是@Component，它就像一条网线，把Dagger2 new的对象，“传送到”到需要被声明的地方。
+- 如果用@Inject构造对象，我们来看下代码：
 ```
 import javax.inject.Inject;//@Inject是java提供，并不是Dagger2
 
@@ -39,9 +49,8 @@ public class ComputerEntity {
 ```
 ### 源码分析：
 - 查看app/build/source/apt/debug/yourpackage(你的包名下)
-```
-```
-- @Inject构造对象的局限性：1，无法构造参数；2，无法构造那些第三方对象，因为我们无法给它的构造方法加注解。这时候需要用到@Module
+
+- @Inject构造对象的局限性：1，无法构造参数(TODO)；2，无法构造那些第三方对象，因为我们无法给它的构造方法加注解。这时候需要用到@Module
 
 Dagger2中如果用@Module提供两个同样类型的对象，Dagger2会报错：
 ```
@@ -362,11 +371,29 @@ public final class CarEntity_Module_MembersInjector implements MembersInjector<C
     instance.wheelEntity = wheelEntityProvider.get();
   }
 ```
-
-
-
+### @Lazy
+### @Binds
+可以使用@Binds来简化@Provides 一个接口的对象
+``` 
+    @Provides
+    IRepositoryManager bindRepositoryManager(RepositoryManager repositoryManager){
+      return repositoryManager;
+    };
+```
+--->
+```
+    @Binds
+    abstract IRepositoryManager bindRepositoryManager(RepositoryManager repositoryManager);
+    //前提是@Module修饰的类需要改为abstract
+```
+### Component.Builder
+- 通过使用 Component.Builder 来注解接口，Dagger 会自动生成跟上面完全相同的 Builder 类。
+### @BindsInstance
+- 可以直接为与@Component相关联的@Module中的同类型的成员变量赋值，@Module中就不必要再提供已经被@BindsInstance修饰的变量。
 ### 说一千道一万，自己写一遍，才能明白
 ### @Module是如何工作的呢？
 
-- Thanks:https://zhuanlan.zhihu.com/p/24454466
-- Thanks:https://google.github.io/dagger/users-guide
+# Thanks
+- https://zhuanlan.zhihu.com/p/24454466
+- https://google.github.io/dagger/users-guide
+- [Dagger 2 : Component.Builder注解有什么用？](https://juejin.im/post/5a4cf2b2f265da430d586ace)

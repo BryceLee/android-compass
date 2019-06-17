@@ -13,9 +13,22 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - Textview
         - [FontFamily](https://blog.csdn.net/yuanxw44/article/details/80019501)
 
-## Architecture
+# Architecture
 - MVP
 - MVVM
+- Clean
+![](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg)
+    - common architecture features:
+        - Independent of Frameworks. The architecture does not depend on the existence of some library of feature laden software. This allows you to use such frameworks as tools, rather than having to cram your system into their limited constraints.
+        - Testable. The business rules can be tested without the UI, Database, Web Server, or any other external element.
+        - Independent of UI. The UI can change easily, without changing the rest of the system. A Web UI could be replaced with a console UI, for example, without changing the business rules.
+        - Independent of Database. You can swap out Oracle or SQL Server, for Mongo, BigTable, CouchDB, or something else. Your business rules are not bound to the database.
+        - Independent of any external agency. In fact your business rules simply don’t know anything at all about the outside world.
+    - Only Four Circles?No, the circles are schematic. You may find that you need more than just these four. There’s no rule that says you must always have just these four. However, The Dependency Rule always applies.
+    - The Dependency Rule：The dependency direction is from outer to inner.
+    - Use Cases:Use cases orchestrate the flow of data to and from the entities, and direct those entities to use their enterprise wide business rules to achieve the goals of the use case.
+- Dagger2
+     - [Dagger2源码分析](https://github.com/BryceLee/android-compass/blob/master/FramesSourceAnalysis/Dagger2SourceAnalysis.md)
 ## JetPack
 - Paging
     - [office document](https://developer.android.google.cn/topic/libraries/architecture/paging/#java)

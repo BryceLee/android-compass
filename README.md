@@ -155,12 +155,12 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     ```
 ## Fragment
 ## Broadcast
-    - 广播有哪些类型？
-    - 本地广播的实现原理
-    - EventBus 类的广播的实现
+- 广播有哪些类型？
+- 本地广播的实现原理
+- EventBus 类的广播的实现
 ## Service
-    - AMS
-    - PMS
+- AMS
+- PMS
 ## Handler
 - 原理:ThreadLocal可以在每个线程中存储数据并且获取数据，要使用Handler，线程必须拥有Looper，当前一开始时没有Looper的，Looper被创建存储在ThreadLocal中。 消息被存储在MessageQueue这个单链表中，Looper无限的从队列中取消息来处理。ActivityThread就是UI线程，ActivityThread被创建的时候就初始化了Looper，这是UI线程默认可以使用Handler的原因。
     - Handler为什么会持有外部的引用：
@@ -195,6 +195,16 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 # Architecture
 - MVP
 - MVVM
+- Clean
+![](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg)
+    - common architecture features:
+        - Independent of Frameworks. The architecture does not depend on the existence of some library of feature laden software. This allows you to use such frameworks as tools, rather than having to cram your system into their limited constraints.
+        - Testable. The business rules can be tested without the UI, Database, Web Server, or any other external element.
+        - Independent of UI. The UI can change easily, without changing the rest of the system. A Web UI could be replaced with a console UI, for example, without changing the business rules.
+        - Independent of Database. You can swap out Oracle or SQL Server, for Mongo, BigTable, CouchDB, or something else. Your business rules are not bound to the database.
+        - Independent of any external agency. In fact your business rules simply don’t know anything at all about the outside world.
+    - Only Four Circles?No, the circles are schematic. You may find that you need more than just these four. There’s no rule that says you must always have just these four. However, The Dependency Rule always applies.
+    - The Dependency Rule：The dependency direction is from outer to inner.
 - Dagger2
      - [Dagger2源码分析](https://github.com/BryceLee/android-compass/blob/master/FramesSourceAnalysis/Dagger2SourceAnalysis.md)
 # JetPack
@@ -351,11 +361,12 @@ https://www.jianshu.com/p/ac00e370f83d
     - 3.当潜在的泄漏数量达到阀值，就dumps Javaheap的引用信息到.hprof文件中，app显示的时候阀值是5，否则是1
     - 4.LeakCanary会找到一个实例的引用链，从实例到GCROOT最近的强引用一般是原因，但是还是得看情况分析
 ### [启动优化][app_launcher_optimize]
-
+- [systrace](https://source.android.com/devices/tech/debug/systrace)
 ### [减少APK体积][reduce_apk_size]
 ### 线程优化
 - [官方文档](https://developer.android.com/topic/performance/threads)
-
+- Each thread costs a minimum of 64k of memory.
+- Many system processes and third-party libraries often spin up their own threadpools. If your app can reuse an existing threadpool, this reuse may help performance by reducing contention for memory and processing resources.
 https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extension#heading-14
 # Hybrid
 - Fultter
@@ -392,9 +403,9 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
     - [Buyly Summary](https://www.jianshu.com/p/168feeea2363)
 ## Test
 ### Junit4(local unit test)
-    - Junit is the most popular and widely-used unit testing framework for java.
-    - a test method begins with the @Test annotation and contains the code to exercise and verify a single functionality in the component that you want to test.
-    - if you meet runtimeException--Error: "Method ... not mocked",you should add some configuration,because you run a test that calls an API from the Android SDK that you do not mock.
+- Junit is the most popular and widely-used unit testing framework for java.
+- a test method begins with the @Test annotation and contains the code to exercise and verify a single functionality in the component that you want to test.
+- if you meet runtimeException--Error: "Method ... not mocked",you should add some configuration,because you run a test that calls an API from the Android SDK that you do not mock.
     ```
     android {
     // ...
@@ -429,6 +440,7 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
 
 ## Version Control Tools
 - [Git](https://git-scm.com/book/en/v2)
+    - git commit --amend(修改未push的当前本地commit message)
 - [SourceTree](https://www.sourcetreeapp.com/)(A Git UI Client)
 
 ## Example
@@ -554,6 +566,7 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
 - [Android 中高级工程师面试复习大纲](https://juejin.im/post/5cdd7a94f265da03775c781a)
 - [RFC wiki](https://zh.wikipedia.org/wiki/RFC)
 - [Dalvik wiki](https://zh.wikipedia.org/wiki/Dalvik%E8%99%9A%E6%8B%9F%E6%9C%BA)
+- [Uncle Bob's Clean](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 
 [design]:https://github.com/BryceLee/android-compass/blob/master/design.md
 [networkProtocol]:https://github.com/BryceLee/android-compass/blob/master/networkProtocol.md
