@@ -372,9 +372,9 @@ public final class CarEntity_Module_MembersInjector implements MembersInjector<C
   }
 ```
 ### @Lazy
-- 每一个被@Lazy修饰的实例，在被调用的被计算值，虽有的使用都有同一个值；但是@Lazy不等于@Singleton
-- @Inject的被注入的时候就计算值，但是之后都用同一个值
-- @Provider是需要的计算，但是每次调用都新建一个值
+- 每一个被@Lazy修饰的实例，在被调用的初始化，虽有的使用都有同一个实例；但是@Lazy不等于@Singleton
+- @Inject的被注入的时候就初始化，但是本次流程中，之后调用，都用同一个实例
+- @Provider是需要的初始化，但是每次调用都会初始化
 ```
 //有一个这样的Module
  @Module
@@ -423,8 +423,8 @@ final class LazyCounter {
     abstract IRepositoryManager bindRepositoryManager(RepositoryManager repositoryManager);
     //前提是@Module修饰的类需要改为abstract
 ```
-### Component.Builder
-- 通过使用 Component.Builder 来注解接口，Dagger 会自动生成跟上面完全相同的 Builder 类。
+### @Component.Builder
+- 通过使用 Component.Builder 来自定义Component的Builder类，Dagger 会自动生成跟上面完全相同的 Builder 类。
 ### @BindsInstance
 - 可以直接为与@Component相关联的@Module中的同类型的成员变量赋值，@Module中就不必要再提供已经被@BindsInstance修饰的变量。
 ### 说一千道一万，自己写一遍，才能明白
