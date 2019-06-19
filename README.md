@@ -195,7 +195,7 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - MVP
 - MVVM
 - Clean
-![](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg)
+    - ![](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg)
     - common architecture features:
         - Independent of Frameworks. The architecture does not depend on the existence of some library of feature laden software. This allows you to use such frameworks as tools, rather than having to cram your system into their limited constraints.
         - Testable. The business rules can be tested without the UI, Database, Web Server, or any other external element.
