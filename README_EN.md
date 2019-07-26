@@ -5,11 +5,33 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 
 ## Language
 - Java
-- Rxjava
 - Kotlin
 - C
 - C++
+- Groovy
 ## View
+- MeasureSpec:It encapsulates the layout requirements passed from parent to child.Each MeasureSpec represents a requirement for either the width or the height.A MeasureSpec is comprised of a size and a mode.There are three possible modes:
+    - UNSPECIFIED
+        - The Parent has not imposed any constraint on the child.The Child can be whatever size it wants. 
+    - EXACTLY
+        - The Parent has determined an exact size for the child.The Child is going to be given those bounds regardless how big it wants to be.
+    - AT_MOST
+        - The child can be as large as it wants up to the specified size.
+    ```
+     public static int makeMeasureSpec(@IntRange(from = 0, to = (1 << MeasureSpec.MODE_SHIFT) - 1) int size,
+                                          @MeasureSpecMode int mode) {
+            if (sUseBrokenMakeMeasureSpec) {
+                return size + mode;
+            } else {
+                return (size & ~MODE_MASK) | (mode & MODE_MASK);
+            }
+        }
+    ```
+- ViewRootImpl:The top of a view hierarchy,implementing the needed protocol between View and WindowManager.
+- WindowManger
+- Window
+- PhoneWindow
+- DecorView
 - Textview
         - [FontFamily](https://blog.csdn.net/yuanxw44/article/details/80019501)
 
@@ -70,10 +92,9 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 
 ## Data Store
 - ORM
-
 - SharedPreferences
     - [apply() vs commit()](https://www.jianshu.com/p/3b2ac6201b33)
-
+- MMKV (for replace SharedPreferences)
 ## Route
 - Aroute
     - @Route

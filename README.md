@@ -14,10 +14,12 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - 最大堆
     - 二分法
 - [计算机网络相关][networkProtocol]
-   
+- 关于字符编码，你可以读一下这一篇文章：[关于字符编码，你所需要知道的](http://www.imkevinyang.com/2010/06/%E5%85%B3%E4%BA%8E%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%8C%E4%BD%A0%E6%89%80%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84.html)
 
 ## 程序设计相关
 - [设计思想，设计原则，设计模式][design]
+- Android一些基类，少用继承，多用接口扩展；比如利用好ActivityLifecycleCallbacks
+
 
 ## Language
 - Java
@@ -26,45 +28,12 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - 原子性：https://www.jianshu.com/p/cf57726e77f2
     - [垃圾回收机制](https://github.com/BryceLee/java-compass/blob/master/README.md#heading-2)
            
-- Rxjava
+
 - Kotlin
 - C
     - [C入门记录](https://github.com/BryceLee/android-compass/blob/master/languages/c_primary.md)
 - C++
-## Executor(Interface),ThreadPoolExecutor(Impl)
-- 构造参数说明：
-    - coolPoolsize
-        - 默认情况下一直活着，除非设置ThreadPoolExecutor的allowCoreThreadTimeout=true,核心线程闲置超时也会被终止
-    - maxinumPoolsize
-        - 最大线程数，新任务超过最大值就要等待
-    - keepAliveTime
-        - 线程闲置保活时间
-    - unit
-        - keepAliveTime的单位
-    - workQueue:任务队列，存储runnable对象
-    - ThreadFactory  
-        - 创建线程
-- 参考AsyncTask参数配置：
-    - coolposize=cpucount+1
-    - maximumpoolsize=cpucount*2+1
-    - 核心线程无超时机制，非核心线程超时事件1秒
-    - 任务队列容量128
-- 分类
-     - FixedThreadPool
-        - Executors.newFixedThreadPool()
-            - 固定核心线程，全是核心线程，无超时机制，无任务队列上线 
-            - 适合需要快速响应的任务
-        - Executors.newCachedThreadPool()
-            - 全是非核心线程，最大线程数Interget.Max_Value,60秒超时机制
-            - 无法存储任务，有新任务立即执行
-            - 适合执行大量耗时较少的任务（Retrofit,Rxjava）
-        - Executors.newScheduledThreadPool()
-            - 核心线程固定，最大线程Inter.Max_Value
-            - 超时时间为0，非核心线程闲置会被立即回收
-            - 适合定时任务，具有周期性的任务
-        - Executor.SingleThreadExecutor()
-            - 只有一个核心线程
-            - 单线程的任务
+
 ## Android Studio
 ### Old Version
 - 可以去https://www.androiddevtools.cn/下载旧版本
@@ -85,9 +54,20 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 # Android Basis
 ## Android DataStructure
 - SpareArray
-## View 
+### View
 - [View的事件分发](https://blog.csdn.net/u010983881/article/details/78905598)
 - ![](https://itimetraveler.github.io/gallery/android-view/1520093523-0.png)
+- View位置坐标由以ViewGroup的左上角为顶点的坐标系来决定的，向右是x轴正方形，向下是y轴
+正方向；
+- View的触摸事件
+- MotionEvent
+- TouchSlop，被系统认为是最小的滑动距离，滑动距离必须大于等于这个值才会被系统认为是滑动事件。
+- ConstractLayout
+- [Appbarlayout](https://developer.android.com/reference/android/support/design/widget/AppBarLayout)
+- [CoordinatorLayout](https://developer.android.com/reference/androidx/coordinatorlayout/widget/CoordinatorLayout.html)
+- [NestedScrollView](https://developer.android.com/reference/android/support/v4/widget/NestedScrollView?hl=en)
+- [ConstraintLayout](https://mp.weixin.qq.com/s/JijR16p-DjlsZz8wn5D-PQ)(放一篇总结的很不错的文章)
+
 ## Android动画
 - View Animation：作用在View对象上，
   - tween Animation:写出开始和结束状态，系统会补充中间过程。有translate,scale,rotate,alpha四种效果动画。
@@ -103,7 +83,6 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - [Android动画总结](https://blog.csdn.net/carson_ho/article/details/79860980)
     - [interpolator&TypeEvaluator](https://blog.csdn.net/carson_ho/article/details/72863901)
 - 事件传递
-- [ConstraintLayout](https://mp.weixin.qq.com/s/JijR16p-DjlsZz8wn5D-PQ)(放一篇总结的很不错的文章)
 
 ## Data Store
 - 存储的方式
@@ -115,7 +94,7 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - [Lrucache](https://developer.android.com/reference/android/util/LruCache)（Lru算法）
 ## 数据传递
 - Parcelable
-    - 不写set方法，数据传递失效.   
+- Serializable 
 ## Framework
 ## Activity 
 - Lifecycle
@@ -154,6 +133,8 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     onResume() 
 
     ```
+#### ActivityLifecycleCallbacks
+- [](https://www.jianshu.com/p/75a5c24174b2)
 ## Fragment
 ## Broadcast
 - 广播有哪些类型？
@@ -179,22 +160,65 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
         ```
 ## Permissions
 - [overview](https://developer.android.com/guide/topics/permissions/overview)
-### View
-- View位置坐标由以ViewGroup的左上角为顶点的坐标系来决定的，向右是x轴正方形，向下是y轴
-正方向；
-- View的触摸事件
-- MotionEvent
-- TouchSlop，被系统认为是最小的滑动距离，滑动距离必须大于等于这个值才会被系统认为是滑动事件。
-- ConstractLayout
-- [Appbarlayout](https://developer.android.com/reference/android/support/design/widget/AppBarLayout)
-- [CoordinatorLayout](https://developer.android.com/reference/androidx/coordinatorlayout/widget/CoordinatorLayout.html)
-- [NestedScrollView](https://developer.android.com/reference/android/support/v4/widget/NestedScrollView?hl=en)
+## Executor(Interface),ThreadPoolExecutor(Impl)
+- 构造参数说明：
+    - coolPoolsize
+        - 默认情况下一直活着，除非设置ThreadPoolExecutor的allowCoreThreadTimeout=true,核心线程闲置超时也会被终止
+    - maxinumPoolsize
+        - 最大线程数，新任务超过最大值就要等待
+    - keepAliveTime
+        - 线程闲置保活时间
+    - unit
+        - keepAliveTime的单位
+    - workQueue:任务队列，存储runnable对象
+    - ThreadFactory  
+        - 创建线程
+- 参考AsyncTask参数配置：
+    - coolposize=cpucount+1
+    - maximumpoolsize=cpucount*2+1
+    - 核心线程无超时机制，非核心线程超时事件1秒
+    - 任务队列容量128
+- 分类
+     - FixedThreadPool
+        - Executors.newFixedThreadPool()
+            - 固定核心线程，全是核心线程，无超时机制，无任务队列上线 
+            - 适合需要快速响应的任务
+        - Executors.newCachedThreadPool()
+            - 全是非核心线程，最大线程数Interget.Max_Value,60秒超时机制
+            - 无法存储任务，有新任务立即执行
+            - 适合执行大量耗时较少的任务（Retrofit,Rxjava）
+        - Executors.newScheduledThreadPool()
+            - 核心线程固定，最大线程Inter.Max_Value
+            - 超时时间为0，非核心线程闲置会被立即回收
+            - 适合定时任务，具有周期性的任务
+        - Executor.SingleThreadExecutor()
+            - 只有一个核心线程
+            - 单线程的任务
+
+## 绘制View辅助资源
+- 根据View的状态来改变颜色
+    - 在代码中，用ColorStateList来表示。
+    - 在XML中，使用selector文件，位于res/color/filename.xml，示例：
+    ```
+    <?xml version="1.0" encoding="utf-8"?>
+    <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true"
+          android:color="#ffff0000"/> <!-- pressed -->
+    <item android:state_focused="true"
+          android:color="#ff0000ff"/> <!-- focused -->
+    <item android:color="#ff000000"/> <!-- default -->
+    </selector>
+    ```
+    [（点击查看详细描述）](https://developer.android.com/guide/topics/resources/color-list-resource)
+    
 ## 渲染机制
 
 # Architecture
 - MVP
 - MVVM
 - Clean
+    
+    
     ![](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg)
     - common architecture features:
         - Independent of Frameworks. The architecture does not depend on the existence of some library of feature laden software. This allows you to use such frameworks as tools, rather than having to cram your system into their limited constraints.
@@ -230,8 +254,15 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - https://juejin.im/post/5acec2b46fb9a028c6761628 通过注解处理器，把生成类的特征信息保存在编译生成类里，通过JavaPoet来辅助生成Java类代码
     - ButterKnife.bind(this)-->docorview和对应的Class
     - docorview.findViewByid(R.id...)
-## Network
-- Okhttp
+## Rxjava
+- [RxJavaPlugins](https://github.com/ReactiveX/RxJava/blob/2.x/CHANGES.md#version-206---february-15-2017-maven)
+
+# Network
+### Okhttp
+#### Intercrptors
+Interceptors are a powerful mechanism that can monitor, rewrite, and retry calls.
+OkHttp uses lists to track interceptors, and interceptors are called in order.
+[更多关于Okhttp][okhttp]
 - Retrofit
     - [多个BaseUrl，一个Retrofit实例](http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2017/0726/8267.html)
     - 这里我不想接入上面的库，但是[HostSelectionInterceptor.java
@@ -372,12 +403,17 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
 - Rn
 - Weex
 - WebView
-    - JavaScriptInterface
-        - js用这样的代码调用native:window.JavaScriptInterface.callHandler...
+    - Js&Native Interaction
+        - JavaScriptInterface
+            - js用这样的代码调用native:window.JavaScriptInterface.callHandler...
             - 使用@JavaScriptInterface来绑定交互方法
-        -  js用这样的代码调用native:window.WebViewJavascriptBridge.callHandler...
+        - WebViewJavascriptBridge
+            -  js用这样的代码调用native:window.WebViewJavascriptBridge.callHandler...
             - [WebViewJavascriptBridge](https://blog.csdn.net/sk719887916/article/details/47189607)
         - [WebView性能、体验分析与优化](https://tech.meituan.com/2017/06/09/webviewperf.html)
+    - Local Debug
+        - Put the js code under main/assets
+        - load url:"file:///android_asset/yourfilename.html"
 - links
     - [Flutter 要全平台制霸？我看悬](https://mp.weixin.qq.com/s/VnnhurJ03vEb75uB2PS6Wg)
 ## Route
@@ -394,9 +430,20 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
 ## Apk
 - 签名校验
     - jarsigner -certs -verbose -verify xxx.apk ([apk是否已经签名？](https://blog.csdn.net/qq_36005519/article/details/53519481))
-
+# 多进程
+## Common issues
+- static variable and single instance failed
+- thread syncronized failed
+- SharedPreferences is not trusted(MMKV is trusted,it is Tencent open resouce project)
+- Application will be crated multiple times. 
+# 插件化
 # Android Studio
 - [adb#shellcommands](https://developer.android.com/studio/command-line/adb#shellcommands)
+### 配置编译
+- 生成APK过程
+![](https://developer.android.com/images/tools/studio/build-process_2x.png)
+- 合并清单文件
+![](https://developer.android.com/studio/images/build/manifest-merger_2x.png)
 ## App Version Update
 - [Bugly](https://bugly.qq.com/docs/introduction/app-upgrade-introduction)
     - [Buyly Summary](https://www.jianshu.com/p/168feeea2363)
@@ -414,7 +461,6 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
 }
     ```
 - 【Chinese Blog About Unit Test】（https://www.jianshu.com/p/aa51a3e007e2）
-### 
 ## Built-in Test
 - Auto Pack
     - [Jenkins](https://jenkins.io/doc/)
@@ -541,6 +587,8 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
 - Web性能权威
 ## 操作系统
 - Unix 网络编程
+## 插件化
+- Android插件化开发指南
 ## Opengl ES
 - OpenGL ES 2 for Android
 # Hook
@@ -571,3 +619,5 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
 [networkProtocol]:https://github.com/BryceLee/android-compass/blob/master/networkProtocol.md
 [reduce_apk_size]:https://github.com/BryceLee/android-compass/blob/master/optimize/reduce_apk_size.md
 [app_launcher_optimize]:https://github.com/BryceLee/android-compass/blob/master/optimize/app_launcher_optimize.md
+
+[okhttp]:https://github.com/BryceLee/android-compass/blob/master/FramesSourceAnalysis/Okhttp.md

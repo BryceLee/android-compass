@@ -36,6 +36,10 @@
             - HTTP 1.0
             - HTTP 1.1(提出Representational state transfer (REST)架构)
         - TCP/UDP
+            - TCP协议采用three-way handshaking策略
+                - Flag:
+                    - SYN(Sychronized)
+                    - ACK(Acknowledgement)
         - QUIC
     - OSI概念模型
         ##### 开放式系统互联通信参考模型（英语：Open System Interconnection Reference Model，缩写为 OSI），简称为OSI模型（OSI model），一种概念模型，由国际标准化组织提出，一个试图使各种计算机在世界范围内互连为网络的标准框架。定义于ISO/IEC 7498-1。
