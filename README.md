@@ -51,38 +51,15 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 
 - Groovy
 - [命令](https://blog.csdn.net/qq402164452/article/details/70207279)
-# Android Basis
+
+### [Android Basis(jump)][androidBasis]
+
 ## Android DataStructure
-- SpareArray
-### View
-- [View的事件分发](https://blog.csdn.net/u010983881/article/details/78905598)
-- ![](https://itimetraveler.github.io/gallery/android-view/1520093523-0.png)
-- View位置坐标由以ViewGroup的左上角为顶点的坐标系来决定的，向右是x轴正方形，向下是y轴
-正方向；
-- View的触摸事件
-- MotionEvent
-- TouchSlop，被系统认为是最小的滑动距离，滑动距离必须大于等于这个值才会被系统认为是滑动事件。
-- ConstractLayout
-- [Appbarlayout](https://developer.android.com/reference/android/support/design/widget/AppBarLayout)
-- [CoordinatorLayout](https://developer.android.com/reference/androidx/coordinatorlayout/widget/CoordinatorLayout.html)
-- [NestedScrollView](https://developer.android.com/reference/android/support/v4/widget/NestedScrollView?hl=en)
-- [ConstraintLayout](https://mp.weixin.qq.com/s/JijR16p-DjlsZz8wn5D-PQ)(放一篇总结的很不错的文章)
-
-## Android动画
-- View Animation：作用在View对象上，
-  - tween Animation:写出开始和结束状态，系统会补充中间过程。有translate,scale,rotate,alpha四种效果动画。
-  - frame Animation：自定义动画的每一帧。
-- Property Animation：可以不作用在View对象上（ValueAnimation），也可以作用在对象上(objectAnimation)，具有更高的可扩展性。是在API 11时提供等。
-  - ValueAnimation
-  - ObjectAnimation
-
-  - 可以监听动画效果，也可以使用插值器来控制动画速度。
-  - ![image](https://user-gold-cdn.xitu.io/2019/2/22/169158b7461a93ba?w=1140&h=270&f=png&s=75625)
-  
-- Thanks:
-    - [Android动画总结](https://blog.csdn.net/carson_ho/article/details/79860980)
-    - [interpolator&TypeEvaluator](https://blog.csdn.net/carson_ho/article/details/72863901)
-- 事件传递
+- SparseArray
+    - Better Performance
+        - Clone
+        - binarySearch
+        - Gc
 
 ## Data Store
 - 存储的方式
@@ -92,47 +69,7 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - SharedPreferences
 ## 缓存
 - [Lrucache](https://developer.android.com/reference/android/util/LruCache)（Lru算法）
-## 数据传递
-- Parcelable
-- Serializable 
-## Framework
-## Activity 
-- Lifecycle
-    - onPause()轻量存储
-    - onStop()重量回收，但是不宜太耗时
-    - onDestroy()回收
-- android:exported
-    - 设置Activity是否能够被其他应用的组建唤起，”true“为允许，“false”为不允许
-    - 如果你设置了"intent filter"就不应该设置exported=false，否则会抛出ActivityNotFoundException
-    - 默认是false
-    - 另一个属性也可以显示Activity被外部实体访问：permission
-- android:hardwareAccelerated
-    - Activity是否开启硬件加速渲染
-- android:launchMode
-    - Launchmode
-        - standard
-            - 每次都创建
-        - singleTop
-            - 实例在栈顶，就复用，否则重新创建。
-        - singleTask
-            - 栈内存在实例就复用，但是会清空在事例之上的所有其他实例；不存在就创建
-            - 不存在所属任务栈，先创建任务栈再创建事例，并且入栈
-        - singleInstance
-            - 只能独立的存在一个任务栈;如果实例存在直接提到栈顶，这时候会调用
-    ```
-    如果实例还没有被创建，就走正常的Activity正常周期；
-    启动模式生效时，本身在栈顶，所走的生命周期如下：
-    onPause（） 
-    onNewIntent（） 
-    onResume（）
 
-    启动模式生效时，本身不在栈顶，所走的生命周期如下：
-    onNewIntent() 
-    onRestart() 
-    onStart() 
-    onResume() 
-
-    ```
 #### ActivityLifecycleCallbacks
 - [](https://www.jianshu.com/p/75a5c24174b2)
 ## Fragment
@@ -142,22 +79,30 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - EventBus 类的广播的实现
 ## Service
 - AMS
+    - AMS是Android中最核心的服务，主要负责系统中四大组件的启动、切换、调度及应用进程的管理和调度等工作，其职责与操作系统中的进程管理和调度模块相类似，因此它在Android中非常重要。
 - PMS
-## Handler
-- 原理:ThreadLocal可以在每个线程中存储数据并且获取数据，要使用Handler，线程必须拥有Looper，没有Looper的线程，Looper被创建存储在对应的ThreadLocal中。 消息被存储在MessageQueue这个单链表中，Looper无限的从队列中取消息来处理。ActivityThread就是UI线程，ActivityThread被创建的时候就初始化了Looper，这是UI线程默认可以使用Handler的原因。
-    - Handler为什么会持有外部的引用：
-        - Message会持有Handler的 引用，由于Java的特性，内部类会持有外部类的引用，使得Activity会被Handler持有，这样就可能导致Activity泄露。
-        - Handler sendMessage()方法会调用enqueueMeaage(..)
-
-    ```
-    private boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMillis) {
-        msg.target = this;//msg内部持有了Handler的引用
-        if (mAsynchronous) {
-            msg.setAsynchronous(true);
-        }
-        return queue.enqueueMessage(msg, uptimeMillis);
-    }
-        ```
+## Communication
+- Intent
+- Bundle
+- Serializable
+- Parcelable
+- Binder
+- [AIDL](https://developer.android.com/guide/components/aidl?hl=zh-cn)
+- ContentProvider
+- Socket
+- [Eventbus](https://github.com/greenrobot/EventBus)
+- Rxbus
+- LiveData
+### Support IPC Communication
+- Bundle
+- A process Use Intent Start B process Service..And The Servie do something..
+- Parcelable
+- Binder
+- [AIDL](https://developer.android.com/guide/components/aidl?hl=zh-cn)
+- ContentProvider
+- Messenger
+### IPC potential risk
+- SharedPreferences（因为内存中会有一份对应的缓存）
 ## Permissions
 - [overview](https://developer.android.com/guide/topics/permissions/overview)
 ## Executor(Interface),ThreadPoolExecutor(Impl)
@@ -195,22 +140,7 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
             - 只有一个核心线程
             - 单线程的任务
 
-## 绘制View辅助资源
-- 根据View的状态来改变颜色
-    - 在代码中，用ColorStateList来表示。
-    - 在XML中，使用selector文件，位于res/color/filename.xml，示例：
-    ```
-    <?xml version="1.0" encoding="utf-8"?>
-    <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true"
-          android:color="#ffff0000"/> <!-- pressed -->
-    <item android:state_focused="true"
-          android:color="#ff0000ff"/> <!-- focused -->
-    <item android:color="#ff000000"/> <!-- default -->
-    </selector>
-    ```
-    [（点击查看详细描述）](https://developer.android.com/guide/topics/resources/color-list-resource)
-    
+ 
 ## 渲染机制
 
 # Architecture
@@ -416,17 +346,8 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
         - load url:"file:///android_asset/yourfilename.html"
 - links
     - [Flutter 要全平台制霸？我看悬](https://mp.weixin.qq.com/s/VnnhurJ03vEb75uB2PS6Wg)
-## Route
-- Aroute
-    - @Route
-    - @Servive
-    - @Autowire
-    - @Interceptor(AOP)
 
-## Communication
-- [Eventbus](https://github.com/greenrobot/EventBus)
-- 原理：
-- Rxbus
+
 ## Apk
 - 签名校验
     - jarsigner -certs -verbose -verify xxx.apk ([apk是否已经签名？](https://blog.csdn.net/qq_36005519/article/details/53519481))
@@ -436,6 +357,15 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
 - thread syncronized failed
 - SharedPreferences is not trusted(MMKV is trusted,it is Tencent open resouce project)
 - Application will be crated multiple times. 
+# 组件化
+- CC
+- Aroute
+    - @Route
+    - @Servive
+    - @Autowire
+    - @Interceptor(AOP)
+- [Dilutions](https://github.com/HomHomLin/Dilutions)
+- [Andromeda](https://github.com/iqiyi/Andromeda)
 # 插件化
 # Android Studio
 - [adb#shellcommands](https://developer.android.com/studio/command-line/adb#shellcommands)
@@ -477,11 +407,6 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
     - proguardgui.sh(android_sdk_path/tools/proguard/bin)
         - 利用Retrace功能，结合mapping还原被混淆的代码
         - Mac在terminal输入proguardgui.sh既可打开工具
-## IM
-- [Easemobe](http://www.easemob.com/product/im)（环信IM） 
-    - [Customer Service](http://docs.easemob.com/cs/300visitoraccess/androidsdk)(客服云)
-
-- [RongIM](https://www.rongcloud.cn/)(融云)        
 
 ## Version Control Tools
 - [Git](https://git-scm.com/book/en/v2)
@@ -497,16 +422,6 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
     - [Introduce to Charles](https://juejin.im/post/5b4f005ae51d45191c7e534a)
     - Map(When service don't give data,you can custom data)
 - Python Request
-## update
-- Bugly
-    - update    
-    - hot fix
-        - 注意：Tinker不支持修改AndroidManifest.xml，Tinker不支持新增四大组件(1.9.0支持新增非export的Activity)；
-        - [流行框架比较，原理说明](https://www.cnblogs.com/popfisher/p/8543973.html)
-## Bug Manage
-- Bugly
-    - 必须设置
-- Bugtags
 
 ## JNI
 - 目的
@@ -561,19 +476,7 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
 
 ## UI Desgin
 - UI不用[蓝湖](https://lanhuapp.com)类设计稿管理工具，客户端就难受系列....
-# 开发场景
-## 音视频
-## 电商场景
-- Tangram
-    - https://blog.csdn.net/u013541140/article/details/89517186
-- vlayout
-- 统计
-    - [Umeng AppTrack](https://developer.umeng.com/docs/67964/detail/71107),(注意需要自行配置U-App的自定义事件，文档容易让人误解不需要配置）
 
-[Algorithms]:https://github.com/BryceLee/algorithms-learning
-[C_Primary]:https://github.com/BryceLee/algorithms-learning
-[databinding]:https://github.com/BryceLee/android-compass/blob/master/jetpack/databinding.md
-[java]:https://github.com/BryceLee/android-compass/blob/master/languages/java.md
 # 推荐书单
 ## Linux
 - [性能之巅](https://book.douban.com/subject/26586598/)
@@ -621,3 +524,10 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
 [app_launcher_optimize]:https://github.com/BryceLee/android-compass/blob/master/optimize/app_launcher_optimize.md
 
 [okhttp]:https://github.com/BryceLee/android-compass/blob/master/FramesSourceAnalysis/Okhttp.md
+
+
+[Algorithms]:https://github.com/BryceLee/algorithms-learning
+[C_Primary]:https://github.com/BryceLee/algorithms-learning
+[databinding]:https://github.com/BryceLee/android-compass/blob/master/jetpack/databinding.md
+[java]:https://github.com/BryceLee/android-compass/blob/master/languages/java.md
+[androidBasis]:https://github.com/BryceLee/android-compass/blob/master/androidBasis/androidBasis.md
