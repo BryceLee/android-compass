@@ -2,57 +2,31 @@
 android-compass is a dev manual about Android Architecture,Third Libs ,Utils and Some Solutions to dev.
 # [README OF ENGLISH](https://github.com/BryceLee/android-compass/blob/master/README_EN.md)
 
-## The Basis of Computer
-- 操作系统
-    - 多进程
-    - 多线程
-- 算法和数据结构 
-    - [Algorithms]
-    - [HaspMap](https://github.com/BryceLee/algorithms-learning/blob/master/data-structure/java/hashmap.md)
-    - LinkedList
-    - 快排
-    - 最大堆
-    - 二分法
-- [计算机网络相关][networkProtocol]
-- 关于字符编码，你可以读一下这一篇文章：[关于字符编码，你所需要知道的](http://www.imkevinyang.com/2010/06/%E5%85%B3%E4%BA%8E%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%8C%E4%BD%A0%E6%89%80%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84.html)
+## [The Basis of Computer][Basis]
 
 ## 程序设计相关
 - [设计思想，设计原则，设计模式][design]
 - Android一些基类，少用继承，多用接口扩展；比如利用好ActivityLifecycleCallbacks
 
-
 ## Language
-- Java
-    - [内存模型](https://blog.csdn.net/javazejian/article/details/72772461#comments)
-    - https://juejin.im/post/5ab8d3d46fb9a028ca52f813
-    - 原子性：https://www.jianshu.com/p/cf57726e77f2
-    - [垃圾回收机制](https://github.com/BryceLee/java-compass/blob/master/README.md#heading-2)
-           
-
-- Kotlin
-- C
-    - [C入门记录](https://github.com/BryceLee/android-compass/blob/master/languages/c_primary.md)
-- C++
-
+### [Java]((https://github.com/BryceLee/android-compass/blob/master/languages/java.md))
+### [Kotlin]((https://github.com/BryceLee/android-compass/blob/master/languages/kotlin.md))
+### [C](https://github.com/BryceLee/android-compass/blob/master/languages/c_primary.md)
+### C++
 ## Android Studio
 ### Old Version
-- 可以去https://www.androiddevtools.cn/下载旧版本
+- 可以去[这里](https://www.androiddevtools.cn/)下载旧版本
 - Mac环境下：
     - 打开dmg文件，把AndroidStudio移动Applicaiton下，（正常安装布局，本地已经有As会弹出是否覆盖选项，选择keep both）
     - 默认是AndroidStudio 2，可以自行更名
     - 我这边选择不导入旧配置，不确定选择旧配置是否会有影响，所查资料也是建议用全新的配置，可以在隐藏文件~Library/Application Support看到新的As版本信息
-### keymap in common use
-- Back
-    - 返回上一个编辑的地方
-- Move Caret to Line Start（把光标移动到行首）
-- Move Caret to Line End(把光标移动到行尾)
 ## Gralde
 - [Gradle和Plugin对应版本要求](https://developer.android.com/studio/releases/gradle-plugin.html#updating-gradle)
 
 - Groovy
 - [命令](https://blog.csdn.net/qq402164452/article/details/70207279)
 
-### [Android Basis(jump)][androidBasis]
+## [Android Basis][androidBasis]
 
 ## Android DataStructure
 - SparseArray
@@ -70,17 +44,19 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 ## 缓存
 - [Lrucache](https://developer.android.com/reference/android/util/LruCache)（Lru算法）
 
-#### ActivityLifecycleCallbacks
-- [](https://www.jianshu.com/p/75a5c24174b2)
+#### [ActivityLifecycleCallbacks]((https://www.jianshu.com/p/75a5c24174b2))
+
 ## Fragment
 ## Broadcast
-- 广播有哪些类型？
+(TODO)
+- 广播有哪些类型
 - 本地广播的实现原理
 - EventBus 类的广播的实现
 ## Service
 - AMS
     - AMS是Android中最核心的服务，主要负责系统中四大组件的启动、切换、调度及应用进程的管理和调度等工作，其职责与操作系统中的进程管理和调度模块相类似，因此它在Android中非常重要。
 - PMS
+    - PMS用来管理所有的package信息，包括安装、卸载、更新以及解析AndroidManifest.xml以组织相应的数据结构，这些数据结构将会被PMS、AMS等service和application使用.
 ## Communication
 - Intent
 - Bundle
@@ -105,50 +81,14 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
 - SharedPreferences（因为内存中会有一份对应的缓存）
 ## Permissions
 - [overview](https://developer.android.com/guide/topics/permissions/overview)
-## Executor(Interface),ThreadPoolExecutor(Impl)
-- 构造参数说明：
-    - coolPoolsize
-        - 默认情况下一直活着，除非设置ThreadPoolExecutor的allowCoreThreadTimeout=true,核心线程闲置超时也会被终止
-    - maxinumPoolsize
-        - 最大线程数，新任务超过最大值就要等待
-    - keepAliveTime
-        - 线程闲置保活时间
-    - unit
-        - keepAliveTime的单位
-    - workQueue:任务队列，存储runnable对象
-    - ThreadFactory  
-        - 创建线程
-- 参考AsyncTask参数配置：
-    - coolposize=cpucount+1
-    - maximumpoolsize=cpucount*2+1
-    - 核心线程无超时机制，非核心线程超时事件1秒
-    - 任务队列容量128
-- 分类
-     - FixedThreadPool
-        - Executors.newFixedThreadPool()
-            - 固定核心线程，全是核心线程，无超时机制，无任务队列上线 
-            - 适合需要快速响应的任务
-        - Executors.newCachedThreadPool()
-            - 全是非核心线程，最大线程数Interget.Max_Value,60秒超时机制
-            - 无法存储任务，有新任务立即执行
-            - 适合执行大量耗时较少的任务（Retrofit,Rxjava）
-        - Executors.newScheduledThreadPool()
-            - 核心线程固定，最大线程Inter.Max_Value
-            - 超时时间为0，非核心线程闲置会被立即回收
-            - 适合定时任务，具有周期性的任务
-        - Executor.SingleThreadExecutor()
-            - 只有一个核心线程
-            - 单线程的任务
 
- 
 ## 渲染机制
 
 # Architecture
+- MVC
 - MVP
 - MVVM
 - Clean
-    
-    
     ![](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg)
     - common architecture features:
         - Independent of Frameworks. The architecture does not depend on the existence of some library of feature laden software. This allows you to use such frameworks as tools, rather than having to cram your system into their limited constraints.
@@ -158,8 +98,7 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
         - Independent of any external agency. In fact your business rules simply don’t know anything at all about the outside world.
     - Only Four Circles?No, the circles are schematic. You may find that you need more than just these four. There’s no rule that says you must always have just these four. However, The Dependency Rule always applies.
     - The Dependency Rule：The dependency direction is from outer to inner.
-- Dagger2
-     - [Dagger2源码分析](https://github.com/BryceLee/android-compass/blob/master/FramesSourceAnalysis/Dagger2SourceAnalysis.md)
+
 # JetPack
 - Paging
     - [office document](https://developer.android.google.cn/topic/libraries/architecture/paging/#java)
@@ -184,6 +123,8 @@ android-compass is a dev manual about Android Architecture,Third Libs ,Utils and
     - https://juejin.im/post/5acec2b46fb9a028c6761628 通过注解处理器，把生成类的特征信息保存在编译生成类里，通过JavaPoet来辅助生成Java类代码
     - ButterKnife.bind(this)-->docorview和对应的Class
     - docorview.findViewByid(R.id...)
+- Dagger2
+     - [Dagger2源码分析](https://github.com/BryceLee/android-compass/blob/master/FramesSourceAnalysis/Dagger2SourceAnalysis.md)
 ## Rxjava
 - [RxJavaPlugins](https://github.com/ReactiveX/RxJava/blob/2.x/CHANGES.md#version-206---february-15-2017-maven)
 
@@ -328,6 +269,133 @@ https://www.jianshu.com/p/ac00e370f83d
 - Each thread costs a minimum of 64k of memory.
 - Many system processes and third-party libraries often spin up their own threadpools. If your app can reuse an existing threadpool, this reuse may help performance by reducing contention for memory and processing resources.
 https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extension#heading-14
+- 在 Application 的业务初始化代码加入进程判断，确保只在自己需要的进程初始化
+#### 使用线程池
+- Executor(Interface),ThreadPoolExecutor(Impl)
+- 构造参数说明：
+    - coolPoolsize
+        - 默认情况下一直活着，除非设置ThreadPoolExecutor的allowCoreThreadTimeout=true,核心线程闲置超时也会被终止
+    - maxinumPoolsize
+        - 最大线程数，新任务超过最大值就要等待
+    - keepAliveTime
+        - 线程闲置保活时间
+    - unit
+        - keepAliveTime的单位
+    - workQueue:任务队列，存储runnable对象
+    - ThreadFactory  
+        - 创建线程
+- 参考AsyncTask参数配置：
+    - coolposize=cpucount+1
+    - maximumpoolsize=cpucount*2+1
+    - 核心线程无超时机制，非核心线程超时事件1秒
+    - 任务队列容量128
+- Executor构建线程池的静态方法（但是并不建议使用Executor来构建线程池）
+    - Executors.newFixedThreadPool()
+        - 固定核心线程，全是核心线程，无超时机制，无任务队列上线 
+            - 适合需要快速响应的任务
+    ```
+    /**
+     * Creates a thread pool that reuses a fixed number of threads
+     * operating off a shared unbounded queue.  At any point, at most
+     * {@code nThreads} threads will be active processing tasks.
+     * If additional tasks are submitted when all threads are active,
+     * they will wait in the queue until a thread is available.
+     * If any thread terminates due to a failure during execution
+     * prior to shutdown, a new one will take its place if needed to
+     * execute subsequent tasks.  The threads in the pool will exist
+     * until it is explicitly {@link ExecutorService#shutdown shutdown}.
+     *
+     * @param nThreads the number of threads in the pool
+     * @return the newly created thread pool
+     * @throws IllegalArgumentException if {@code nThreads <= 0}
+     */
+    public static ExecutorService newFixedThreadPool(int nThreads) {
+        return new ThreadPoolExecutor(nThreads, nThreads,
+                                      0L, TimeUnit.MILLISECONDS,
+                                      new LinkedBlockingQueue<Runnable>());
+    }
+    ```
+    - Executors.newCachedThreadPool()
+        - 全是非核心线程，最大线程数Interget.Max_Value,60秒超时机制
+        - 无法存储任务，有新任务立即执行
+        - 适合执行大量耗时较少的任务（Retrofit,Rxjava）
+    ```
+    /**
+     * Creates a thread pool that creates new threads as needed, but
+     * will reuse previously constructed threads when they are
+     * available.  These pools will typically improve the performance
+     * of programs that execute many short-lived asynchronous tasks.
+     * Calls to {@code execute} will reuse previously constructed
+     * threads if available. If no existing thread is available, a new
+     * thread will be created and added to the pool. Threads that have
+     * not been used for sixty seconds are terminated and removed from
+     * the cache. Thus, a pool that remains idle for long enough will
+     * not consume any resources. Note that pools with similar
+     * properties but different details (for example, timeout parameters)
+     * may be created using {@link ThreadPoolExecutor} constructors.
+     *
+     * @return the newly created thread pool
+     */
+    public static ExecutorService newCachedThreadPool() {
+        return new ThreadPoolExecutor(0, Integer.MAX_VALUE,
+                                      60L, TimeUnit.SECONDS,
+                                      new SynchronousQueue<Runnable>());
+    }
+    ```
+    - Executors.newScheduledThreadPool()
+        - 核心线程固定，最大线程Inter.Max_Value
+        - 超时时间为0，非核心线程闲置会被立即回收
+        - 适合定时任务，具有周期性的任务
+    ```
+    /**
+     * Creates a new {@code ScheduledThreadPoolExecutor} with the
+     * given core pool size.
+     *
+     * @param corePoolSize the number of threads to keep in the pool, even
+     *        if they are idle, unless {@code allowCoreThreadTimeOut} is set
+     * @throws IllegalArgumentException if {@code corePoolSize < 0}
+     */
+    public ScheduledThreadPoolExecutor(int corePoolSize) {
+        super(corePoolSize, Integer.MAX_VALUE,
+              DEFAULT_KEEPALIVE_MILLIS, MILLISECONDS,
+              new DelayedWorkQueue());
+    }
+    ```
+    - Executor.SingleThreadExecutor()
+        - 只有一个核心线程
+        - 单线程的任务
+    ```
+    /**
+     * Creates an Executor that uses a single worker thread operating
+     * off an unbounded queue. (Note however that if this single
+     * thread terminates due to a failure during execution prior to
+     * shutdown, a new one will take its place if needed to execute
+     * subsequent tasks.)  Tasks are guaranteed to execute
+     * sequentially, and no more than one task will be active at any
+     * given time. Unlike the otherwise equivalent
+     * {@code newFixedThreadPool(1)} the returned executor is
+     * guaranteed not to be reconfigurable to use additional threads.
+     *
+     * @return the newly created single-threaded Executor
+     */
+    public static ExecutorService newSingleThreadExecutor() {
+        return new FinalizableDelegatedExecutorService
+            (new ThreadPoolExecutor(1, 1,
+                                    0L, TimeUnit.MILLISECONDS,
+                                    new LinkedBlockingQueue<Runnable>()));
+    }
+    ```
+- Executors 返回的线程池对象的弊端如下(摘自《阿里巴巴 Android 开发手册》(1.0.0)):
+    - FixedThreadPool 和 SingleThreadPool:允许的请求队列(LinkedBlockingQueue)长度为Integer.MAX_VALUE，可能会堆积大量的请求，从而导致 OOM;   
+    - CachedThreadPool 和 ScheduledThreadPool:允许的创建线程数量为Integer.MAX_VALUE，可能会创建大量的线程，从而导致OOM。
+- 因此不建议使用Executor来构建线程池，而应该用
+ThreadPoolExcutor来够构造线程池；
+```
+int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
+int KEEP_ALIVE_TIME = 1;
+TimeUnit KEEP_ALIVE_TIME_UNIT = TimeUnit.SECONDS; BlockingQueue<Runnable> taskQueue = new LinkedBlockingQueue<Runnable>(); ExecutorService executorService = new ThreadPoolExecutor(NUMBER_OF_CORES, NUMBER_OF_CORES*2, KEEP_ALIVE_TIME, KEEP_ALIVE_TIME_UNIT,
+taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler());
+```
 # Hybrid
 - Fultter
 - Rn
@@ -421,7 +489,6 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
 - Charles
     - [Introduce to Charles](https://juejin.im/post/5b4f005ae51d45191c7e534a)
     - Map(When service don't give data,you can custom data)
-- Python Request
 
 ## JNI
 - 目的
@@ -474,9 +541,6 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
 ## 反编译
 - [Mac下反编译教程][http://www.devio.org/2018/05/08/Android-reverse-engineering-for-mac/]
 
-## UI Desgin
-- UI不用[蓝湖](https://lanhuapp.com)类设计稿管理工具，客户端就难受系列....
-
 # 推荐书单
 ## Linux
 - [性能之巅](https://book.douban.com/subject/26586598/)
@@ -506,6 +570,7 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
 # 架构
 # Thanks:
 - 《Android开发高手课》（张绍文）
+- 《阿里巴巴 Android 开发手册》(1.0.0)
 - 《最强Android书 架构大剖析》
 - 《Android开发艺术探索》
 - [面试时究竟在问些什么](http://blog.zhaiyifan.cn/2019/01/25/when-i-talk-about-interview/)
@@ -531,3 +596,4 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
 [databinding]:https://github.com/BryceLee/android-compass/blob/master/jetpack/databinding.md
 [java]:https://github.com/BryceLee/android-compass/blob/master/languages/java.md
 [androidBasis]:https://github.com/BryceLee/android-compass/blob/master/androidBasis/androidBasis.md
+[Basis]:https://github.com/BryceLee/android-compass/blob/master/computerBasis/basis.md
