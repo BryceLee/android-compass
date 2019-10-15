@@ -78,7 +78,8 @@ android-compass is a dev manual about cs basis,Android basis,Android architectur
 - ContentProvider
 - Messenger
 ### IPC potential risk
-- SharedPreferences（因为内存中会有一份对应的缓存）
+- 单例失效
+- SharedPreferences不安全（因为内存中会有一份对应的缓存）
 ## Permissions
 - [overview](https://developer.android.com/guide/topics/permissions/overview)
 
@@ -88,16 +89,28 @@ android-compass is a dev manual about cs basis,Android basis,Android architectur
 - MVC
 - MVP
 - MVVM
+- [MVC,MVP,MVVM总结可以看这篇文章](https://tech.meituan.com/2016/11/11/android-mvvm.html)
 - Clean
     ![](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg)
-    - common architecture features:
-        - Independent of Frameworks. The architecture does not depend on the existence of some library of feature laden software. This allows you to use such frameworks as tools, rather than having to cram your system into their limited constraints.
-        - Testable. The business rules can be tested without the UI, Database, Web Server, or any other external element.
-        - Independent of UI. The UI can change easily, without changing the rest of the system. A Web UI could be replaced with a console UI, for example, without changing the business rules.
-        - Independent of Database. You can swap out Oracle or SQL Server, for Mongo, BigTable, CouchDB, or something else. Your business rules are not bound to the database.
-        - Independent of any external agency. In fact your business rules simply don’t know anything at all about the outside world.
-    - Only Four Circles?No, the circles are schematic. You may find that you need more than just these four. There’s no rule that says you must always have just these four. However, The Dependency Rule always applies.
-    - The Dependency Rule：The dependency direction is from outer to inner.
+    - 基础特性:
+        - 框架独立，如工具一般随时可拆卸替换使用。
+        - 易测试，业务逻辑可以独立测试，不需要UI，数据等外部细节。
+        - UI独立，UI修改完全不影响其他业务逻辑。
+        - 数据独立，切换数据库不影响其他业务逻辑。
+        - 外部代理独立，业务逻辑完全不依赖外部细节。
+    - 并不是必须是四层结构，这里知识为了展示原理，只要遵循这些思想即可。
+    - 从外向内的单向依赖
+    - Use Cases的出现缓解了Presenter的压力（项目够大的情况下，会发现MVP很麻烦，新增一个V的状态就可能需要多写几个接口，P层接口会很臃肿）
+    - [参考文章][Uncle Bob's Clean]，[参考视频](https://www.youtube.com/watch?v=Nltqi7ODZTM)
+    - 示范：
+        - [MVP + Clean Architecture](https://github.com/android/architecture-samples/tree/todo-mvp-clean)
+        - [Use Cases/Interactors in Domain layer](https://github.com/android/architecture-samples/tree/usecases)，就像这里所提到的一样，包括上面MVP + Clean Architecture，都是一个Clean的简化，由于项目比较小，不足以完整展示Clean架构，但是他们都遵循了Clean架构，我们参考即可。
+        - 参考
+            - [Android 架构：Part 4 —— 实践 Clean Architecture（含源码](https://listenzz.github.io/android-architecture-part-4-applying-clean-architecture-on-android-hands-on.html)
+            - [Android-CleanArchitecture](https://github.com/android10/Android-CleanArchitecture)
+            - https://juejin.im/post/59cace88f265da0648446780
+            - https://juejin.im/post/5b87f3c9e51d45387e51dcf7
+            - [Reedly](https://github.com/fiveagency/Reedly)
 
 # JetPack
 - Paging
@@ -115,7 +128,7 @@ android-compass is a dev manual about cs basis,Android basis,Android architectur
         - 
         - ……
 - Arouter
-    - https://www.jianshu.com/p/857aea5b54a8 原来Arouter的跳转原理，就是用过注解处理器（annotationProcessor），扫描所有使用了@Route的类，把path信息和对应Class文件和一些参数绑定起来，并且并保存在相应的HaspMap里，path是key值，value是RouteMeta的对象。然后在跳转的时候再把数据拿出来使用。
+    - https://www.jianshu.com/p/857aea5b54a8 原来Arouter的跳转原理，就是用过注解处理器（annotationProcessor），扫描所有使用了@Route的类，把path信息和对应Class文件和一些参数绑定起来，并且并保存在相应的HashMap里，path是key值，value是RouteMeta的对象。然后在跳转的时候再把数据拿出来使用。
     - 实际上还是用context.startActivity(inent)
 - Eventbus
     - https://juejin.im/post/5ae2e6dcf265da0b9d77f28e EventBus使用了观察者模式。在运行时默认使用反射来找到订阅的方法，这种方式，在大量使用EventBus的情况下，会有效率问题；也可以在编译期间，通过注解处理器（annotationProcessor）来生成辅助类，保存订阅方法的相关信息，类似ButterKnife，Arouter的做法。
@@ -491,7 +504,7 @@ taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler())
 
 ## JNI
 - 目的
-    - 交Java层而言，优化性能，对抗逆向
+    - 较Java层而言，优化性能，对抗逆向
 - 生成so流程
     - 定义native方法
     - javah生成头文件
@@ -580,7 +593,6 @@ taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler())
 - [Android 中高级工程师面试复习大纲](https://juejin.im/post/5cdd7a94f265da03775c781a)
 - [RFC wiki](https://zh.wikipedia.org/wiki/RFC)
 - [Dalvik wiki](https://zh.wikipedia.org/wiki/Dalvik%E8%99%9A%E6%8B%9F%E6%9C%BA)
-- [Uncle Bob's Clean](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 
 [design]:https://github.com/BryceLee/android-compass/blob/master/design.md
 [networkProtocol]:https://github.com/BryceLee/android-compass/blob/master/networkProtocol.md
@@ -596,3 +608,4 @@ taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler())
 [java]:https://github.com/BryceLee/android-compass/blob/master/languages/java.md
 [androidBasis]:https://github.com/BryceLee/android-compass/blob/master/androidBasis/androidBasis.md
 [Basis]:https://github.com/BryceLee/android-compass/blob/master/computerBasis/basis.md
+[Uncle Bob's Clean]:https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
