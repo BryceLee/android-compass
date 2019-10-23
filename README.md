@@ -1,6 +1,6 @@
 # android-compass
 android-compass is a dev manual about cs basis,Android basis,Android architecture,useful open resource projects and some knowledge points of performance optimization. 
-# [README OF ENGLISH](https://github.com/BryceLee/android-compass/blob/master/README_EN.md)
+### [README OF ENGLISH](https://github.com/BryceLee/android-compass/blob/master/README_EN.md)
 
 ## [The Basis of Computer][Basis]
 
@@ -53,10 +53,10 @@ android-compass is a dev manual about cs basis,Android basis,Android architectur
 - 本地广播的实现原理
 - EventBus 类的广播的实现
 ## Service
-- AMS
+- ActivityManagerService(AMS)
     - AMS是Android中最核心的服务，主要负责系统中四大组件的启动、切换、调度及应用进程的管理和调度等工作，其职责与操作系统中的进程管理和调度模块相类似，因此它在Android中非常重要。
-- PMS
-    - PMS用来管理所有的package信息，包括安装、卸载、更新以及解析AndroidManifest.xml以组织相应的数据结构，这些数据结构将会被PMS、AMS等service和application使用.
+- PackageManagerService
+    - PMS用来管理所有的package信息，包括安装、卸载、更新以及解析AndroidManifest.xml以组织相应的数据结构，这些数据结构将会被PackageManagerService、AMS等service和application使用.
 ## Communication
 - Intent
 - Bundle
@@ -92,6 +92,8 @@ android-compass is a dev manual about cs basis,Android basis,Android architectur
 - [MVC,MVP,MVVM总结可以看这篇文章](https://tech.meituan.com/2016/11/11/android-mvvm.html)
 - Clean
     ![](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg)
+    更适用Android的版本：
+    ![](https://listenzz.github.io/images/android/Graph-1-2.png)
     - 基础特性:
         - 框架独立，如工具一般随时可拆卸替换使用。
         - 易测试，业务逻辑可以独立测试，不需要UI，数据等外部细节。
@@ -99,14 +101,20 @@ android-compass is a dev manual about cs basis,Android basis,Android architectur
         - 数据独立，切换数据库不影响其他业务逻辑。
         - 外部代理独立，业务逻辑完全不依赖外部细节。
     - 并不是必须是四层结构，这里知识为了展示原理，只要遵循这些思想即可。
-    - 从外向内的单向依赖
-    - Use Cases的出现缓解了Presenter的压力（项目够大的情况下，会发现MVP很麻烦，新增一个V的状态就可能需要多写几个接口，P层接口会很臃肿）
+    - 从外向内的单向依赖。
+    - 控制的流程是从外到里再到外的，注意上图右下角。（[对于这一点，如果有疑问你可以看这里](https://five.agency/wp-content/uploads/2016/11/Graph-1-2.png）
+    - Use Cases的出现缓解了Presenter的压力（项目够大的情况下，会发现MVP很麻烦，新增一个V的状态就可能需要多写几个接口，P层接口会很臃肿），上图中的Presenter我们可以自行选用MVC，MVP，MVVM。
+    - 关于UseCase的实践:
+    ![](https://listenzz.github.io/images/android/graf_1.png)
+    - 关于模块，见下图：
+    ![](https://listenzz.github.io/images/android/Graph-2-2.png)
     - [参考文章][Uncle Bob's Clean]，[参考视频](https://www.youtube.com/watch?v=Nltqi7ODZTM)
     - 示范：
         - [MVP + Clean Architecture](https://github.com/android/architecture-samples/tree/todo-mvp-clean)
         - [Use Cases/Interactors in Domain layer](https://github.com/android/architecture-samples/tree/usecases)，就像这里所提到的一样，包括上面MVP + Clean Architecture，都是一个Clean的简化，由于项目比较小，不足以完整展示Clean架构，但是他们都遵循了Clean架构，我们参考即可。
-        - 参考
-            - [Android 架构：Part 4 —— 实践 Clean Architecture（含源码](https://listenzz.github.io/android-architecture-part-4-applying-clean-architecture-on-android-hands-on.html)
+        - 感谢以下作者，译者的付出：
+            - [Android 架构：Part 4 —— 实践 Clean Architecture（含源码](https://listenzz.github.io/android-architecture-part-4-applying-clean-architecture-on-android-hands-on.html)等系列译文
+            - [Android Architecture系列原文](http://five.agency/android-architecture-part-3-applying-clean-architecture-android/)
             - [Android-CleanArchitecture](https://github.com/android10/Android-CleanArchitecture)
             - https://juejin.im/post/59cace88f265da0648446780
             - https://juejin.im/post/5b87f3c9e51d45387e51dcf7
@@ -119,7 +127,12 @@ android-compass is a dev manual about cs basis,Android basis,Android architectur
     - [Add footer and header for paging](https://juejin.im/post/5caa0052f265da24ea7d3c2c#heading-5) ([Compare paging to BaseRecyclerViewAdapterHelper](#adapter))
 - [Databinding][databinding]
 <span id="adapter"></span>
+
 # Powerful Open Source Project
+- [javapoet](https://github.com/square/javapoet)
+    - A java library for generating .java source files.
+    - [可以看这篇文章](https://juejin.im/post/5bc96b63e51d450e4369ba19)
+    - 很多库都依赖了javapoet，比如ButterKnife，Arouter等等
 - Adapter:
     - [BaseRecyclerViewAdapterHelper](https://github.com/CymChad/BaseRecyclerViewAdapterHelper)
 - Utils:
@@ -133,9 +146,10 @@ android-compass is a dev manual about cs basis,Android basis,Android architectur
 - Eventbus
     - https://juejin.im/post/5ae2e6dcf265da0b9d77f28e EventBus使用了观察者模式。在运行时默认使用反射来找到订阅的方法，这种方式，在大量使用EventBus的情况下，会有效率问题；也可以在编译期间，通过注解处理器（annotationProcessor）来生成辅助类，保存订阅方法的相关信息，类似ButterKnife，Arouter的做法。
 - ButterKnife
-    - https://juejin.im/post/5acec2b46fb9a028c6761628 通过注解处理器，把生成类的特征信息保存在编译生成类里，通过JavaPoet来辅助生成Java类代码
+    - 通过注解处理器，把生成类的特征信息保存在编译生成类里，通过JavaPoet来辅助生成Java类代码
     - ButterKnife.bind(this)-->docorview和对应的Class
     - docorview.findViewByid(R.id...)
+    - [可以阅读这边源码分析文章](https://juejin.im/post/5acec2b46fb9a028c6761628)
 - Dagger2
      - [Dagger2源码分析](https://github.com/BryceLee/android-compass/blob/master/FramesSourceAnalysis/Dagger2SourceAnalysis.md)
 ## Rxjava
@@ -447,6 +461,7 @@ taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler())
 - [Dilutions](https://github.com/HomHomLin/Dilutions)
 - [Andromeda](https://github.com/iqiyi/Andromeda)
 # 插件化
+# [Xposed](https://github.com/BryceLee/android-compass/blob/master/design.md)
 # Android Studio
 - [adb#shellcommands](https://developer.android.com/studio/command-line/adb#shellcommands)
 ### 配置编译
