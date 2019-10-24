@@ -146,9 +146,8 @@ android-compass is a dev manual about cs basis,Android basis,Android architectur
 - Eventbus
     - https://juejin.im/post/5ae2e6dcf265da0b9d77f28e EventBus使用了观察者模式。在运行时默认使用反射来找到订阅的方法，这种方式，在大量使用EventBus的情况下，会有效率问题；也可以在编译期间，通过注解处理器（annotationProcessor）来生成辅助类，保存订阅方法的相关信息，类似ButterKnife，Arouter的做法。
 - ButterKnife
-    - 第一步，通过注解处理器，在编译期扫描项目中标注的注解信息，如@BindView，@OnClick等ButterKnife支持的注解，得到被注解类的信息，如包名，类名，是View,或者Activity，还是Dialog等信息，存储在BindSet中，再通过JavaPoet来生产对应的类，（对应的包名下，对应的类名+"_ViewBinding"结尾）
-    - 第二步，在使用的时候我们总是要写ButterKnife.bind(this)的代码，它告诉ButterKinife注解类的信息和对应window的docorview；通过类名找到类对应的在编译期生成的“_ViewBinding”的类（这里有一个缓存机制）,再通过反射拿到对应的构造器，通过Constructor拿到对应的类的实例。这个实例是Unbinder的子类。
-    - 第三步，看"_ViewBinding"类构造方法内，Utils类，是通过类的docorview.findViewByid(R.id...)拿到View的实例，再强转到目标类型。
+    - 在使用的时候我们总是要写ButterKnife.bind(this)的代码，它告诉ButterKinife注解类的信息和对应window的docorview；通过类名找到类对应的在编译期生成的“_ViewBinding”的类（这里有一个缓存机制）,再通过反射拿到对应的构造器，通过Constructor拿到对应的类的实例。这个实例是Unbinder的子类。如果不写这一步，虽然注解生成器类也可以正常生成，但是无法正常完成赋值等操作。
+    - 通过注解处理器，在编译期扫描项目中标注的注解信息，如@BindView，@OnClick等ButterKnife支持的注解，得到被注解类的信息，如包名，类名，是View,或者Activity，还是Dialog等信息，存储在BindSet中，再通过JavaPoet来生产对应的类，（对应的包名下，对应的类名+"_ViewBinding"结尾）。很重要的是在生成编译类的时候拿到每一个注解对应的变量或者其他信息，在"xxx_ViewBinding"类构造方法内，内部的Utils类，是通过类的docorview.findViewByid(R.id...)拿到View的实例，再强转到目标类型,最后赋值给对应的变量。或者做其他目标动作，比如点击事情等。
     - [可以阅读这边源码分析文章](https://juejin.im/post/5acec2b46fb9a028c6761628)
 - Dagger2
      - [Dagger2源码分析](https://github.com/BryceLee/android-compass/blob/master/FramesSourceAnalysis/Dagger2SourceAnalysis.md)
