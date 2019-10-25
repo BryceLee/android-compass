@@ -287,7 +287,7 @@ android-compass is a dev manual about cs basis,Android basis,Android architectur
     }
     ```
     - unregister(Object subscribe)
-        - 通过订阅者和事件类型的集合(**typesBySubscriber**)，找到订阅者对应的事件类型；再通过(**subscriptionsByEventType**)订阅类型拿到订阅者和订阅方法的集合(**typesBySubcriber**)，一一解除订阅。
+        - 通过订阅类和事件类型的集合(**typesBySubscriber**)，找到订阅者对应的事件类型；再通过(**subscriptionsByEventType**)事件类型拿到订阅者和订阅方法的集合(**typesBySubcriber**)，一一解除订阅。
     - 通过反射找到订阅信息这种方式，在大量使用EventBus的情况下，会有效率问题；也可以在编译期间，通过注解处理器（annotationProcessor）来生成辅助类，保存订阅方法的相关信息，类似ButterKnife，Arouter的做法。
     - 粘性事件是可以先发布事件，后面需要的时候在再注册和订阅；在注册流程中，会自行通知订阅方法。可以用到一些缓存场景。[推荐阅读](http://greenrobot.org/eventbus/documentation/configuration/sticky-events/)
     - [可以阅读这边源码分析文章](https://juejin.im/post/5ae2e6dcf265da0b9d77f28e)
