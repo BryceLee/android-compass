@@ -29,12 +29,15 @@
 - 事件传递
 
 ## Handler
-- 原理:ThreadLocal可以在每个线程中存储数据并且获取数据，要使用Handler，线程必须拥有Looper，没有Looper的线程，Looper被创建存储在对应的ThreadLocal中。 消息被存储在MessageQueue这个单链表中，Looper无限的从队列中取消息来处理。ActivityThread就是UI线程，ActivityThread被创建的时候就初始化了Looper，这是UI线程默认可以使用Handler的原因。
+- 原理:
+    - 应用启动的时候调用ActivityThread的main方法，Looper.prepareMainLooper被调用，初始化了主Looper，这也是UI线程默认可以使用Handler的原因。ThreadLocal可以在每个线程中存储数据并且获取数据，要使用Handler，线程必须拥有Looper，否则在执行Looper.loop()的时候将报错“"No Looper; Looper.prepare() wasn't called on this thread."。Looper被存储在对应的ThreadLocal中。 消息被存储在MessageQueue这个单链表中，调用Looper.loop(),Looper无限的从队列中取消息来交给Handler处理(MessageQueue.next()得到要处理的消息)。
     - Handler为什么会持有外部的引用：
-        - Message会持有Handler的 引用，由于Java的特性，内部类会持有外部类的引用，使得Activity会被Handler持有，这样就可能导致Activity泄露。
+        - 由于Java的特性，内部类会持有外部类的引用，使得Activity会被Handler持有，
+        而Handler被Message持有，Message被MessageQueue持有，如果没有及时清掉消息，可能导致Activity泄露。消息如果正常队列中会移出消息，讲执行msg.target.dispatchMessage(msg)，消息处理完后会被回收，也将不再持有Handler的引用。
         - Handler sendMessage()方法会调用enqueueMeaage(..)
 
     ```
+    //查看源代码也可以发现，我们常用的Handler.post(Runnable r)也是最后调用如下方法
     private boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMillis) {
         msg.target = this;//msg内部持有了Handler的引用
         if (mAsynchronous) {
@@ -43,6 +46,8 @@
         return queue.enqueueMessage(msg, uptimeMillis);
     }
         ```
+    - 在ActivityThread调用完Looper.prepareMainLooper后，还将调用Looper.loop();
+    - [推荐阅读](https://blog.csdn.net/will_ls/article/details/79040890)
 ## 绘制View辅助资源
 - 根据View的状态来改变颜色
     - 在代码中，用ColorStateList来表示。

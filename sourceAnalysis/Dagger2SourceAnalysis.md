@@ -52,7 +52,7 @@ public class ComputerEntity {
 
 - @Inject构造对象的局限性：1，无法构造参数(TODO)；2，无法构造那些第三方对象，因为我们无法给它的构造方法加注解。这时候需要用到@Module
 
-Dagger2中如果用@Module提供两个同样类型的对象，Dagger2会报错：
+### Dagger2中如果用@Module提供两个同样类型的对象，Dagger2会报错：
 ```
 @Module
 public class CarModule {
@@ -427,7 +427,7 @@ final class LazyCounter {
 - 通过使用 Component.Builder 来自定义Component的Builder类，Dagger 会自动生成跟上面完全相同的 Builder 类。
 ### @BindsInstance
 - 可以直接为与@Component相关联的@Module中的同类型的成员变量赋值，@Module中就不必要再提供已经被@BindsInstance修饰的变量。
-### 说一千道一万，自己写一遍，才能明白
+
 ### @Module是如何工作的呢？
 
 # Thanks

@@ -351,7 +351,7 @@ OkHttp uses lists to track interceptors, and interceptors are called in order.
     - View Cache Pool
 - Layout更小的开销
     - ViewStub
-    - Inclide
+    - Include
     - Merge
     - Contractlayout替代RelativeLayout,LinearLayout
 - 不要重复设置背景
@@ -434,6 +434,8 @@ https://www.jianshu.com/p/ac00e370f83d
     - 4.LeakCanary会找到一个实例的引用链，从实例到GCROOT最近的强引用一般是原因，但是还是得看情况分析
 ### [启动优化][app_launcher_optimize]
 - [systrace](https://source.android.com/devices/tech/debug/systrace)
+- [systrace用法推荐阅读1](https://zhuanlan.zhihu.com/p/27331842)
+- [systrace用法推荐阅读2](https://www.cnblogs.com/andy-songwei/p/10659564.html)
 ### [减少APK体积][reduce_apk_size]
 ### 线程优化
 - [官方文档](https://developer.android.com/topic/performance/threads)
