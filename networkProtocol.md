@@ -32,15 +32,41 @@
                         - status-line = HTTP-version SP status-code SP reason-phrase CRLF 
                         - filed-value=*(field-content/obs-fold)
                         - message-body=*OCTET
-
+            - HTTP 0.9
+                - Request-Response模式
+                - 只支持GET方法，不支持请求头。
             - HTTP 1.0
+                - 扩充了0.9
+                - 增加Header
+                - 增加State Code
             - HTTP 1.1(提出Representational state transfer (REST)架构)
+                - 设置keepalive可以让HTTP重用TCP链接，进而省了每次请求都要进行TCP三次握手的开销（HTTP Persistent Connection）
+                - 增加Cache Control
+                - 协议头增加Language,Encoding,Type,Host
+                - 加入TLS协议加大安全性
+                - 支持四种网络协议
+                    - 短链接
+                    - 重用TCP长链接
+                    - 服务端PUSH模型
+                        - 支持Chunked Response.在Response中不必说明Content-Length。客户端就不断连接，直到收到服务端的EOF标识。
+                    - WebSocket模型
+            - HTTP 2
+                - 把请求从串行改成并行，增加了更大的网络吞吐量和性能
+                - 传输数据从文本协议改成二进制协议，提高传输效率(文本协议需要用ZIP压缩，占用客户端和服务端更多CPU资源)
+                - 会压缩头，多个请求头相似会去重（HPACK算法）
+                - 允许服务端在客户端防缓存
+            - HTTP 3
+                - HTTP2的问题：多请求复用一个TCP连接，发生丢包，所以请求被阻塞
+                - 解决：把TCP改成UDP（UDP不管顺序和丢包）
         - TCP/UDP
             - TCP协议采用three-way handshaking策略
                 - Flag:
                     - SYN(Sychronized)
                     - ACK(Acknowledgement)
-        - QUIC
+        - QUIC（Quick UDP Internet  Connections）
+            - 基于UDP，在HTTP3中，解决HTTP2的多请求复用同一个TCP，丢包阻塞所有请求的问题
+            - HTTPS连接下，合并TCP的三次握手和TLS的三次握手
+            ![](https://coolshell.cn/wp-content/uploads/2019/10/http-request-over-tcp-tls@2x-292x300.png)![](https://coolshell.cn/wp-content/uploads/2019/10/http-request-over-quic@2x-300x215.png)
     - OSI概念模型
         ##### 开放式系统互联通信参考模型（英语：Open System Interconnection Reference Model，缩写为 OSI），简称为OSI模型（OSI model），一种概念模型，由国际标准化组织提出，一个试图使各种计算机在世界范围内互连为网络的标准框架。定义于ISO/IEC 7498-1。
         - ![](https://img-blog.csdn.net/20170502205122263)
@@ -59,5 +85,7 @@
             - Customizability（可定制性）：定制提供服务，不对常规用户产生影响
             - Configurability（可配置性）：应用部署后可以通过修改配置来提供新的功能
             - Reusability（可重用性）：组建可以不做修改在其他应用中使用
+
 # Thanks
 - https://github.com/russelltao/geektime-webprotocol
+- [HTTP的前世今生](https://coolshell.cn/articles/19840.html)
