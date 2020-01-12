@@ -2,7 +2,7 @@
     - 多进程
     - 多线程
 - 算法和数据结构 
-    - [Algorithms]
+    - [Algorithms](https://github.com/BryceLee/algorithms-learning)
     - [HaspMap](https://github.com/BryceLee/algorithms-learning/blob/master/data-structure/java/hashmap.md)
     - LinkedList
     - 快排

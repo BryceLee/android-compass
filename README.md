@@ -307,6 +307,7 @@ Interceptors are a powerful mechanism that can monitor, rewrite, and retry calls
 OkHttp uses lists to track interceptors, and interceptors are called in order.
 [更多关于Okhttp][okhttp]
 - Retrofit
+    - 原理：用Java的动态代理，把定义的接口转换成具体的请求，并且得到请求结果。动态代理中，通过反射拿到方法的注解信息，构造Http请求。
     - [多个BaseUrl，一个Retrofit实例](http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2017/0726/8267.html)
     - 这里我不想接入上面的库，但是[HostSelectionInterceptor.java
 ](https://gist.github.com/swankjesse/8571a8207a5815cca1fb)会影响全路径的请求，可以在上面的基础上改一下：
