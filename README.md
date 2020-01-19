@@ -642,7 +642,7 @@ taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler())
 - [最强Android书：架构大剖析](https://book.douban.com/subject/30269276/)
 - 《Android开发艺术探索》
 ## 虚拟机
-- [程序员的自我修养]（https://book.douban.com/subject/3652388/）
+- [程序员的自我修养](https://book.douban.com/subject/3652388/)
 - 垃圾回收算法手册
 ## 网络
 - Web性能权威
