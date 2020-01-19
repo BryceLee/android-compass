@@ -11,7 +11,7 @@ dependencies {
 #### 这里举一个电脑实体和零件实体的例子。
 ### @Inject&@Module
 - 在Dagger2的使用中,我们可以选用@Inject或者@Module来构造对象，等于告诉Dagger2，
-“来，等我需要的时候帮我new这个”，用@Inject来标记，需要被赋值的声明，“来，我这里需要对象，快帮我new”。另一个重要注解是@Component，它就像一条网线，把Dagger2 new的对象，“传送到”到需要被声明的地方。
+“来，等我需要的时候帮我new这个”，用@Inject来标记，需要被构造类的构造器，另一个重要注解是@Component，它就像一条网线，把Dagger2 new的对象，“传送到”到需要被声明的地方。
 - 如果用@Inject构造对象，我们来看下代码：
 ```
 import javax.inject.Inject;//@Inject是java提供，并不是Dagger2

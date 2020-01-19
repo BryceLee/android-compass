@@ -104,3 +104,55 @@
     onResume() 
 
     ```
+## Android DataStructure
+- SparseArray
+    - Better Performance
+        - Clone
+        - binarySearch
+        - Gc
+
+## Data Store
+- 存储的方式
+- SharedPreference原理
+- 如果想实现跨应用之间的数据操作，怎么实现？
+- 如果需要跨进程读写呢？
+- SharedPreferences
+## 缓存
+- [Lrucache](https://developer.android.com/reference/android/util/LruCache)（Lru算法）
+#### [ActivityLifecycleCallbacks]((https://www.jianshu.com/p/75a5c24174b2))
+## Fragment
+## Broadcast
+(TODO)
+- 广播有哪些类型
+- 本地广播的实现原理
+- EventBus 类的广播的实现
+## Service
+- ActivityManagerService(AMS)
+    - AMS是Android中最核心的服务，主要负责系统中四大组件的启动、切换、调度及应用进程的管理和调度等工作，其职责与操作系统中的进程管理和调度模块相类似，因此它在Android中非常重要。
+- PackageManagerService
+    - PMS用来管理所有的package信息，包括安装、卸载、更新以及解析AndroidManifest.xml以组织相应的数据结构，这些数据结构将会被PackageManagerService、AMS等service和application使用.
+## Communication
+- Intent
+- Bundle
+- Serializable
+- Parcelable
+- Binder
+- [AIDL](https://developer.android.com/guide/components/aidl?hl=zh-cn)
+- ContentProvider
+- Socket
+- [Eventbus](https://github.com/greenrobot/EventBus)
+- Rxbus
+- LiveData
+### Support IPC Communication
+- Bundle
+- A process Use Intent Start B process Service..And The Servie do something..
+- Parcelable
+- Binder
+- [AIDL](https://developer.android.com/guide/components/aidl?hl=zh-cn)
+- ContentProvider
+- Messenger
+### IPC potential risk
+- 单例失效
+- SharedPreferences不安全（因为内存中会有一份对应的缓存）
+## Permissions
+- [overview](https://developer.android.com/guide/topics/permissions/overview)

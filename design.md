@@ -59,3 +59,7 @@
 - 观察者
 - 访问者
 - 迭代器
+
+
+## TODO
+- Android一些基类，少用继承，多用接口扩展；比如利用好ActivityLifecycleCallbacks

@@ -1,90 +1,9 @@
 # android-compass
-android-compass is a dev manual about cs basis,Android basis,Android architecture,useful open resource projects and some knowledge points of performance optimization. 
+android-compass is a learning manual about Android basis,Android architecture,useful open resource projects and some knowledge points of performance optimization. 
 ### [README OF ENGLISH](https://github.com/BryceLee/android-compass/blob/master/README_EN.md)
-
-## [The Basis of Computer][Basis]
-
+## [Android Basis][androidBasis]
 ## 程序设计相关
 - [设计思想，设计原则，设计模式][design]
-- Android一些基类，少用继承，多用接口扩展；比如利用好ActivityLifecycleCallbacks
-
-## Language
-### [Java]((https://github.com/BryceLee/android-compass/blob/master/languages/java.md))
-### [Kotlin]((https://github.com/BryceLee/android-compass/blob/master/languages/kotlin.md))
-### [C](https://github.com/BryceLee/android-compass/blob/master/languages/c_primary.md)
-### C++
-## Android Studio
-### Old Version
-- 可以去[这里](https://www.androiddevtools.cn/)下载旧版本
-- Mac环境下：
-    - 打开dmg文件，把AndroidStudio移动Applicaiton下，（正常安装布局，本地已经有As会弹出是否覆盖选项，选择keep both）
-    - 默认是AndroidStudio 2，可以自行更名
-    - 我这边选择不导入旧配置，不确定选择旧配置是否会有影响，所查资料也是建议用全新的配置，可以在隐藏文件~Library/Application Support看到新的As版本信息
-## Gralde
-- [Gradle和Plugin对应版本要求](https://developer.android.com/studio/releases/gradle-plugin.html#updating-gradle)
-
-- Groovy
-- [命令](https://blog.csdn.net/qq402164452/article/details/70207279)
-
-## [Android Basis][androidBasis]
-
-## Android DataStructure
-- SparseArray
-    - Better Performance
-        - Clone
-        - binarySearch
-        - Gc
-
-## Data Store
-- 存储的方式
-- SharedPreference原理
-- 如果想实现跨应用之间的数据操作，怎么实现？
-- 如果需要跨进程读写呢？
-- SharedPreferences
-## 缓存
-- [Lrucache](https://developer.android.com/reference/android/util/LruCache)（Lru算法）
-
-#### [ActivityLifecycleCallbacks]((https://www.jianshu.com/p/75a5c24174b2))
-
-## Fragment
-## Broadcast
-(TODO)
-- 广播有哪些类型
-- 本地广播的实现原理
-- EventBus 类的广播的实现
-## Service
-- ActivityManagerService(AMS)
-    - AMS是Android中最核心的服务，主要负责系统中四大组件的启动、切换、调度及应用进程的管理和调度等工作，其职责与操作系统中的进程管理和调度模块相类似，因此它在Android中非常重要。
-- PackageManagerService
-    - PMS用来管理所有的package信息，包括安装、卸载、更新以及解析AndroidManifest.xml以组织相应的数据结构，这些数据结构将会被PackageManagerService、AMS等service和application使用.
-## Communication
-- Intent
-- Bundle
-- Serializable
-- Parcelable
-- Binder
-- [AIDL](https://developer.android.com/guide/components/aidl?hl=zh-cn)
-- ContentProvider
-- Socket
-- [Eventbus](https://github.com/greenrobot/EventBus)
-- Rxbus
-- LiveData
-### Support IPC Communication
-- Bundle
-- A process Use Intent Start B process Service..And The Servie do something..
-- Parcelable
-- Binder
-- [AIDL](https://developer.android.com/guide/components/aidl?hl=zh-cn)
-- ContentProvider
-- Messenger
-### IPC potential risk
-- 单例失效
-- SharedPreferences不安全（因为内存中会有一份对应的缓存）
-## Permissions
-- [overview](https://developer.android.com/guide/topics/permissions/overview)
-
-## 渲染机制
-
 # Architecture
 - MVC
 - MVP
@@ -119,7 +38,7 @@ android-compass is a dev manual about cs basis,Android basis,Android architectur
             - https://juejin.im/post/59cace88f265da0648446780
             - https://juejin.im/post/5b87f3c9e51d45387e51dcf7
             - [Reedly](https://github.com/fiveagency/Reedly)
-
+## 渲染机制
 # JetPack
 - Paging
     - [office document](https://developer.android.google.cn/topic/libraries/architecture/paging/#java)
@@ -743,6 +662,19 @@ taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler())
 - Trap Hook
 - Inline Hook
 # 架构
+
+## Android Studio
+### Old Version
+- 可以去[这里](https://www.androiddevtools.cn/)下载旧版本
+- Mac环境下：
+    - 打开dmg文件，把AndroidStudio移动Applicaiton下，（正常安装布局，本地已经有As会弹出是否覆盖选项，选择keep both）
+    - 默认是AndroidStudio 2，可以自行更名
+    - 我这边选择不导入旧配置，不确定选择旧配置是否会有影响，所查资料也是建议用全新的配置，可以在隐藏文件~Library/Application Support看到新的As版本信息
+## Gralde
+- [Gradle和Plugin对应版本要求](https://developer.android.com/studio/releases/gradle-plugin.html#updating-gradle)
+- Groovy
+- [命令](https://blog.csdn.net/qq402164452/article/details/70207279)
+
 # Thanks:
 - 《Android开发高手课》（张绍文）
 - 《阿里巴巴 Android 开发手册》(1.0.0)
