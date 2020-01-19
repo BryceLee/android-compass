@@ -87,5 +87,6 @@
             - Reusability（可重用性）：组建可以不做修改在其他应用中使用
 
 # Thanks
+- https://zh.wikipedia.org/wiki
 - https://github.com/russelltao/geektime-webprotocol
 - [HTTP的前世今生](https://coolshell.cn/articles/19840.html)

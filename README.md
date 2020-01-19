@@ -1,6 +1,7 @@
 # android-compass
-android-compass is a learning manual about Android basis,Android architecture,useful open resource projects and some knowledge points of performance optimization. 
+android-compass is a learning manual about Cs basis,Android basis,Android architecture,useful open resource projects and some knowledge points of performance optimization. 
 ### [README OF ENGLISH](https://github.com/BryceLee/android-compass/blob/master/README_EN.md)
+## [CS Basis](https://github.com/BryceLee/android-compass/blob/master/computerBasis/basis.md)
 ## [Android Basis][androidBasis]
 ## 程序设计相关
 - [设计思想，设计原则，设计模式][design]
