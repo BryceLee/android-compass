@@ -114,6 +114,9 @@ Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
 - GC优化
 - 业务流程优化
     - 延迟执行非启动必须的业务
+- 根据业务场景延迟部分初始化操作
+- 避免多进程重复初始化
+
 # Thanks
 - // Starts recording a trace log with the name you provide. For example, the
 // following code tells the system to start recording a .trace file to the

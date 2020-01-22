@@ -1,0 +1,4 @@
+## ButterKnife
+- 在使用的时候我们总是要写ButterKnife.bind(this)的代码，它告诉ButterKinife注解类的信息和对应window的docorview；通过类名找到类对应的在编译期生成的“_ViewBinding”的类（这里有一个缓存机制）,再通过反射拿到对应的两个参数的构造器，调用了这个构造方法，也拿到了对应的类的实例。这个实例是Unbinder的子类。如果不写这一步，虽然注解生成器类也可以正常生成，但是没有调用构造方法也意味着没有进行赋值等操作。
+- 通过注解处理器，在编译期扫描项目中标注的注解信息，如@BindView，@OnClick等ButterKnife支持的注解，得到被注解类的信息，如包名，类名，是View,或者Activity，还是Dialog等信息，存储在BindSet中，再通过JavaPoet来生产对应的类，（对应的包名下，对应的类名+"_ViewBinding"结尾）。很重要的是在生成编译类的时候拿到每一个注解对应的变量或者其他信息，在"xxx_ViewBinding"类构造方法内，内部的Utils类，是通过类的docorview.findViewByid(R.id...)拿到View的实例，再强转到目标类型,最后赋值给对应的变量。或者做其他目标动作，比如点击事情等。
+- [可以阅读这边源码分析文章](https://juejin.im/post/5acec2b46fb9a028c6761628)

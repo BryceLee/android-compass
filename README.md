@@ -1,5 +1,5 @@
 # android-compass
-android-compass is a learning manual about Cs basis,Android basis,Android architecture,useful open resource projects and some knowledge points of performance optimization. 
+Android-Compass is a learning manual about CS basis,Android basis,Android Architecture,useful open resource projects and some knowledge points of performance optimization. 
 ### [README OF ENGLISH](https://github.com/BryceLee/android-compass/blob/master/README_EN.md)
 ## [CS Basis](https://github.com/BryceLee/android-compass/blob/master/computerBasis/basis.md)
 ## [Android Basis][androidBasis]
@@ -49,195 +49,36 @@ android-compass is a learning manual about Cs basis,Android basis,Android archit
 <span id="adapter"></span>
 
 # Powerful Open Source Project
-- [javapoet](https://github.com/square/javapoet)
-    - A java library for generating .java source files.
-    - [可以看这篇文章](https://juejin.im/post/5bc96b63e51d450e4369ba19)
-    - 很多库都依赖了javapoet，比如ButterKnife，Arouter等等
-- Adapter:
-    - [BaseRecyclerViewAdapterHelper](https://github.com/CymChad/BaseRecyclerViewAdapterHelper)
-- Utils:
-    - [AndroidUtilCode](https://github.com/Blankj/AndroidUtilCode)
-        - SpanUtils(TextView Rich Text Utils,Useful!)
-        - 
-        - ……
-- Arouter
-    - https://www.jianshu.com/p/857aea5b54a8 原来Arouter的跳转原理，就是用过注解处理器（annotationProcessor），扫描所有使用了@Route的类，把path信息和对应Class文件和一些参数绑定起来，并且并保存在相应的HashMap里，path是key值，value是RouteMeta的对象。然后在跳转的时候再把数据拿出来使用。
-    - 实际上还是用context.startActivity(inent)
-- Eventbus（基于3.1.1源码）
-    - EventBus使用了观察者模式。
-    - register(Object subscribe)方法逻辑
-        - 在运行时，在注册方法下，默认使用反射来找到使用订阅方法信息的集合，（查找过程会有一个concurrenthashmap(**METHOD_CACHE**)来缓存注册Eventbus的类和订阅方法的映射关系），接着在同步代码块内，遍历前面订阅方法集合，一一订阅。
-        - 订阅过程是，收集注册类和订阅方法对应的映射关系（**typesBySubscriber**），再保存以订阅事件的类型为key,注册类和订阅方法绑定关系的集合为value的hashmap(**subscriptionsByEventType**).
-    - post（Object event）方法逻辑
-    ```
-     /** Posts the given event to the event bus. */
-    public void post(Object event) {
-        PostingThreadState postingState = currentPostingThreadState.get();
-        List<Object> eventQueue = postingState.eventQueue;
-        //把事件添加到postingState的队列里
-        eventQueue.add(event);
-
-        if (!postingState.isPosting) {
-            postingState.isMainThread = isMainThread();
-            postingState.isPosting = true;
-            if (postingState.canceled) {
-                throw new EventBusException("Internal error. Abort state was not reset");
-            }
-            try {
-                while (!eventQueue.isEmpty()) {
-                    //遍历队列一一发送
-                    postSingleEvent(eventQueue.remove(0), postingState);
-                }
-            } finally {
-                postingState.isPosting = false;
-                postingState.isMainThread = false;
-            }
-        }
-    }
-    ```
-    - 接着看postSingleEvent(..)
-    ```
-    private void postSingleEvent(Object event, PostingThreadState postingState) throws Error {
-        Class<?> eventClass = event.getClass();
-        boolean subscriptionFound = false;
-        if (eventInheritance) {
-            List<Class<?>> eventTypes = lookupAllEventTypes(eventClass);
-            int countTypes = eventTypes.size();
-            for (int h = 0; h < countTypes; h++) {
-                Class<?> clazz = eventTypes.get(h);
-                //postSingleEventForEventType（..）发送每一个事件
-                subscriptionFound |= postSingleEventForEventType(event, postingState, clazz);
-            }
-        } else {
-            subscriptionFound = postSingleEventForEventType(event, postingState, eventClass);
-        }
-        if (!subscriptionFound) {
-            if (logNoSubscriberMessages) {
-                logger.log(Level.FINE, "No subscribers registered for event " + eventClass);
-            }
-            if (sendNoSubscriberEvent && eventClass != NoSubscriberEvent.class &&
-                    eventClass != SubscriberExceptionEvent.class) {
-                post(new NoSubscriberEvent(this, event));
-            }
-        }
-    }
-    ```
-    再看postSingleEventForEventType（...）
-    ```
-    private boolean postSingleEventForEventType(Object event, PostingThreadState postingState, Class<?> eventClass) {
-        CopyOnWriteArrayList<Subscription> subscriptions;
-        synchronized (this) {
-            //根据register(..)中收集到的事件类型和订阅信息的映射关系，拿到需要的订阅方法相关集合
-            subscriptions = subscriptionsByEventType.get(eventClass);
-        }
-        if (subscriptions != null && !subscriptions.isEmpty()) {
-            for (Subscription subscription : subscriptions) {
-                postingState.event = event;
-                postingState.subscription = subscription;
-                boolean aborted = false;
-                try {
-                    //准备一一处理订阅方法
-                    postToSubscription(subscription, event, postingState.isMainThread);
-                    aborted = postingState.canceled;
-                } finally {
-                    postingState.event = null;
-                    postingState.subscription = null;
-                    postingState.canceled = false;
-                }
-                if (aborted) {
-                    break;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-    ```
-    - 处理事件的订阅方法的逻辑，根据线程模式来处理，但是无论如何都将调用void invokeSubscriber(Subscription subscription, Object event)
-    ```
-     private void postToSubscription(Subscription subscription, Object event, boolean isMainThread) {
-        switch (subscription.subscriberMethod.threadMode) {
-            case POSTING:
-                invokeSubscriber(subscription, event);
-                break;
-            case MAIN:
-                if (isMainThread) {
-                    invokeSubscriber(subscription, event);
-                } else {
-                    mainThreadPoster.enqueue(subscription, event);
-                }
-                break;
-            case MAIN_ORDERED:
-                if (mainThreadPoster != null) {
-                    //在HandlerPoster中切换到主线程处理
-                    mainThreadPoster.enqueue(subscription, event);
-                } else {
-                    // temporary: technically not correct as poster not decoupled from subscriber
-                    invokeSubscriber(subscription, event);
-                }
-                break;
-            case BACKGROUND:
-                if (isMainThread) {
-                    //在BackgroundPoster调用线程池处理
-                    backgroundPoster.enqueue(subscription, event);
-                } else {
-                    invokeSubscriber(subscription, event);
-                }
-                break;
-            case ASYNC:
-                //在AsyncPoster调用线程池处理，和BACKGROUND的区别在于ASYNC总是新开线程处理，而前者是在主线程的时候会新开线程处理事件。
-                asyncPoster.enqueue(subscription, event);
-                break;
-            default:
-                throw new IllegalStateException("Unknown thread mode: " + subscription.subscriberMethod.threadMode);
-        }
-    }
-    ```
-    - 最后通过反射吊起订阅类的方法，并传入事件类的实例。
-    ```
-     void invokeSubscriber(Subscription subscription, Object event) {
-        try {
-            subscription.subscriberMethod.method.invoke(subscription.subscriber, event);
-        } catch (InvocationTargetException e) {
-            handleSubscriberException(subscription, event, e.getCause());
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException("Unexpected exception", e);
-        }
-    }
-    ```
-    - unregister(Object subscribe)
-        - 通过订阅类和事件类型的集合(**typesBySubscriber**)，找到订阅者对应的事件类型；再通过(**subscriptionsByEventType**)事件类型拿到订阅者和订阅方法的集合(**typesBySubcriber**)，一一解除订阅。
-    - 通过反射找到订阅信息这种方式，在大量使用EventBus的情况下，会有效率问题；也可以在编译期间，通过注解处理器（annotationProcessor）来生成辅助类，保存订阅方法的相关信息，类似ButterKnife，Arouter的做法。
-    - 粘性事件是可以先发布事件，后面需要的时候在再注册和订阅；在注册流程中，会自行通知订阅方法。可以用到一些缓存场景。[推荐阅读](http://greenrobot.org/eventbus/documentation/configuration/sticky-events/)
-    - [可以阅读这边源码分析文章](https://juejin.im/post/5ae2e6dcf265da0b9d77f28e)
-- ButterKnife
-    - 在使用的时候我们总是要写ButterKnife.bind(this)的代码，它告诉ButterKinife注解类的信息和对应window的docorview；通过类名找到类对应的在编译期生成的“_ViewBinding”的类（这里有一个缓存机制）,再通过反射拿到对应的两个参数的构造器，调用了这个构造方法，也拿到了对应的类的实例。这个实例是Unbinder的子类。如果不写这一步，虽然注解生成器类也可以正常生成，但是没有调用构造方法也意味着没有进行赋值等操作。
-    - 通过注解处理器，在编译期扫描项目中标注的注解信息，如@BindView，@OnClick等ButterKnife支持的注解，得到被注解类的信息，如包名，类名，是View,或者Activity，还是Dialog等信息，存储在BindSet中，再通过JavaPoet来生产对应的类，（对应的包名下，对应的类名+"_ViewBinding"结尾）。很重要的是在生成编译类的时候拿到每一个注解对应的变量或者其他信息，在"xxx_ViewBinding"类构造方法内，内部的Utils类，是通过类的docorview.findViewByid(R.id...)拿到View的实例，再强转到目标类型,最后赋值给对应的变量。或者做其他目标动作，比如点击事情等。
-    - [可以阅读这边源码分析文章](https://juejin.im/post/5acec2b46fb9a028c6761628)
-- Dagger2
-     - [Dagger2源码分析](https://github.com/BryceLee/android-compass/blob/master/FramesSourceAnalysis/Dagger2SourceAnalysis.md)
+## [javapoet](https://github.com/square/javapoet)
+- A java library for generating .java source files.
+- [可以看这篇文章](https://juejin.im/post/5bc96b63e51d450e4369ba19)
+- 很多库都依赖了javapoet，比如ButterKnife，Arouter等等
+## Adapter:
+- [BaseRecyclerViewAdapterHelper](https://github.com/CymChad/BaseRecyclerViewAdapterHelper)
+## [AndroidUtilCode](https://github.com/Blankj/AndroidUtilCode)
+- SpanUtils(TextView Rich Text Utils,Useful!)
+- ... 
+## [Arouter](./sourceAnalysis/Arouter.md)
+## [Eventbus（基于3.1.1源码）](./sourceAnalysis/Eventbus.md)
+## [ButterKnife](./sourceAnalysis/ButterKnife.md)
+## [Dagger2](./sourceAnalysis/Dagger2.md)
 ## Rxjava
 - [RxJavaPlugins](https://github.com/ReactiveX/RxJava/blob/2.x/CHANGES.md#version-206---february-15-2017-maven)
-
-# Network
+## Network
 ### Okhttp
 #### Intercrptors
 Interceptors are a powerful mechanism that can monitor, rewrite, and retry calls.
 OkHttp uses lists to track interceptors, and interceptors are called in order.
 [更多关于Okhttp][okhttp]
-- Retrofit
-    - 原理：用Java的动态代理，把定义的接口转换成具体的请求，并且得到请求结果。动态代理中，通过反射拿到方法的注解信息，构造Http请求。
-    - [多个BaseUrl，一个Retrofit实例](http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2017/0726/8267.html)
-    - 这里我不想接入上面的库，但是[HostSelectionInterceptor.java
+### Retrofit
+- 原理：用Java的动态代理，把定义的接口转换成具体的请求，并且得到请求结果。动态代理中，通过反射拿到方法的注解信息，构造Http请求。
+- [多个BaseUrl，一个Retrofit实例](http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2017/0726/8267.html)
+- 这里我不想接入上面的库，但是[HostSelectionInterceptor.java
 ](https://gist.github.com/swankjesse/8571a8207a5815cca1fb)会影响全路径的请求，可以在上面的基础上改一下：
     - https://blog.csdn.net/jason_996/article/details/78659019
 - Volley
 - Gson
 - FastJson
-## Useful Open Source Project
-- [FlycoRoundView](https://github.com/BryceLee/FlycoRoundView):replace drawable shape,(a lot of drawable .xml will make you crazy)
-- [RxCache](https://github.com/BryceLee/RxCache):Reactive Caching library.
 
 ## Image Loader 
 - Fresco
@@ -251,22 +92,26 @@ OkHttp uses lists to track interceptors, and interceptors are called in order.
 ## Video Player
 - [ExoPlayer](https://github.com/google/ExoPlayer)
 - IjkPlayer
+# Useful Open Source Project
+## [FlycoRoundView](https://github.com/BryceLee/FlycoRoundView)
+- replace drawable shape,(a lot of drawable .xml will make you crazy)
+## [RxCache](https://github.com/BryceLee/RxCache)
+- Reactive Caching library.
     
 # 数据加密
 - [EncriptSharedPreferences](https://developer.android.com/jetpack/androidx/releases/security):provides an implementation of SharedPreferences that automatically encrypts/decrypts all keys and values
 # Optimize
-- ANR
-    - common issues
+## ANR
+- common issues
         - UI线程5秒
         - BroadCastRecevier5秒
         - Service10秒
-    - dignose
-        - Strict Mode
+- dignose
+- Strict Mode
             - Using StrictMode helps you find accidental I/O operations on the main thread while you’re developing your app. You can use StrictMode at the application or activity level
             - StrictMode is a developer tool which detects things you might be doing by accident and brings them to your attention so you can fix them.
-        - 生成.trace文件，进一步分析
-        - Tips
-    - [Tips](https://developer.android.com/training/articles/perf-tips)
+- 生成.trace文件，进一步分析
+- [Tips](https://developer.android.com/training/articles/perf-tips)
 ## UI优化
 - View复用
     - View Cache Pool
@@ -276,19 +121,20 @@ OkHttp uses lists to track interceptors, and interceptors are called in order.
     - Merge
     - Contractlayout替代RelativeLayout,LinearLayout
 - 不要重复设置背景
+- 抛弃XML，用代码来写View（可以从telegram项目代码学习）
 ## 存储优化
-- SharePreference
-    - 原理
-    - [apply() vs commit()](https://www.jianshu.com/p/3b2ac6201b33)
-    - MMKV替代SharedPreference
-        - Writing random int for 1000 times, we get this chart:
-        ![](https://github.com/Tencent/MMKV/wiki/assets/profile_android_mini.jpg)
-        - [MMKV link](https://github.com/Tencent/MMKV)(api 16)
-- JSON解析 
-    - ANDROID JSON
-    - Gson
-    - FastJson （最快）
-    - MSON
+### SharePreference
+- 原理
+- [apply() vs commit()](https://www.jianshu.com/p/3b2ac6201b33)
+- MMKV替代SharedPreference
+    - Writing random int for 1000 times, we get this chart:
+    ![](https://github.com/Tencent/MMKV/wiki/assets/profile_android_mini.jpg)
+    - [MMKV link](https://github.com/Tencent/MMKV)(api 16)
+### JSON解析 
+- ANDROID JSON
+- Gson
+- FastJson （最快）
+- MSON
 - 序列化
     - Serializable
     - Parcelable
@@ -334,15 +180,12 @@ OkHttp uses lists to track interceptors, and interceptors are called in order.
     - 8888
     - 565
 - 内存泄露容易出现的场景
-    - Context泄漏（被某个静态类引用，比如单例）
+    - Context泄漏（被某个静态类引用，比如单例）；解决：Context可以用ApplicationContext代替,及时释放，解绑，解监听。
     - 匿名内部类
-    - 类似Handler这样具备延时操作的场景
+    - 类似Handler这样具备延时操作的场景(1,静态内部类+弱引用;2.及时取消订阅)
     - 无限循环Anime，没有关闭，就会导致Activity内存泄漏
     - 在服务（系统服务或者自定义服务）中注册监听器，必须及时取消监听
-    - Rxjava配合RxLifecycle
-     - 静态内部类+弱引用
-- 方案：
-    - Context可以用ApplicationContext代替,及时释放，解绑，解监听
+    - Rxjava网络请求（可以配合RxLifecycle,[AutoDispose](https://github.com/uber/AutoDispose)） 
 - 查看内存使用情况
     - adb shell dumpsys meminfo packagename
 - https://juejin.im/entry/589542ed2f301e0069054007
@@ -354,9 +197,6 @@ https://www.jianshu.com/p/ac00e370f83d
     - 3.当潜在的泄漏数量达到阀值，就dumps Javaheap的引用信息到.hprof文件中，app显示的时候阀值是5，否则是1
     - 4.LeakCanary会找到一个实例的引用链，从实例到GCROOT最近的强引用一般是原因，但是还是得看情况分析
 ### [启动优化][app_launcher_optimize]
-- [systrace](https://source.android.com/devices/tech/debug/systrace)
-- [systrace用法推荐阅读1](https://zhuanlan.zhihu.com/p/27331842)
-- [systrace用法推荐阅读2](https://www.cnblogs.com/andy-songwei/p/10659564.html)
 ### [减少APK体积][reduce_apk_size]
 ### 线程优化
 - [官方文档](https://developer.android.com/topic/performance/threads)
@@ -364,132 +204,9 @@ https://www.jianshu.com/p/ac00e370f83d
 - Many system processes and third-party libraries often spin up their own threadpools. If your app can reuse an existing threadpool, this reuse may help performance by reducing contention for memory and processing resources.
 https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extension#heading-14
 - 在 Application 的业务初始化代码加入进程判断，确保只在自己需要的进程初始化
-#### 使用线程池
-- Executor(Interface),ThreadPoolExecutor(Impl)
-- 构造参数说明：
-    - coolPoolsize
-        - 默认情况下一直活着，除非设置ThreadPoolExecutor的allowCoreThreadTimeout=true,核心线程闲置超时也会被终止
-    - maxinumPoolsize
-        - 最大线程数，新任务超过最大值就要等待
-    - keepAliveTime
-        - 线程闲置保活时间
-    - unit
-        - keepAliveTime的单位
-    - workQueue:任务队列，存储runnable对象
-    - ThreadFactory  
-        - 创建线程
-- 参考AsyncTask参数配置：
-    - coolposize=cpucount+1
-    - maximumpoolsize=cpucount*2+1
-    - 核心线程无超时机制，非核心线程超时事件1秒
-    - 任务队列容量128
-- Executor构建线程池的静态方法（但是并不建议使用Executor来构建线程池）
-    - Executors.newFixedThreadPool()
-        - 固定核心线程，全是核心线程，无超时机制，无任务队列上线 
-            - 适合需要快速响应的任务
-    ```
-    /**
-     * Creates a thread pool that reuses a fixed number of threads
-     * operating off a shared unbounded queue.  At any point, at most
-     * {@code nThreads} threads will be active processing tasks.
-     * If additional tasks are submitted when all threads are active,
-     * they will wait in the queue until a thread is available.
-     * If any thread terminates due to a failure during execution
-     * prior to shutdown, a new one will take its place if needed to
-     * execute subsequent tasks.  The threads in the pool will exist
-     * until it is explicitly {@link ExecutorService#shutdown shutdown}.
-     *
-     * @param nThreads the number of threads in the pool
-     * @return the newly created thread pool
-     * @throws IllegalArgumentException if {@code nThreads <= 0}
-     */
-    public static ExecutorService newFixedThreadPool(int nThreads) {
-        return new ThreadPoolExecutor(nThreads, nThreads,
-                                      0L, TimeUnit.MILLISECONDS,
-                                      new LinkedBlockingQueue<Runnable>());
-    }
-    ```
-    - Executors.newCachedThreadPool()
-        - 全是非核心线程，最大线程数Interget.Max_Value,60秒超时机制
-        - 无法存储任务，有新任务立即执行
-        - 适合执行大量耗时较少的任务（Retrofit,Rxjava）
-    ```
-    /**
-     * Creates a thread pool that creates new threads as needed, but
-     * will reuse previously constructed threads when they are
-     * available.  These pools will typically improve the performance
-     * of programs that execute many short-lived asynchronous tasks.
-     * Calls to {@code execute} will reuse previously constructed
-     * threads if available. If no existing thread is available, a new
-     * thread will be created and added to the pool. Threads that have
-     * not been used for sixty seconds are terminated and removed from
-     * the cache. Thus, a pool that remains idle for long enough will
-     * not consume any resources. Note that pools with similar
-     * properties but different details (for example, timeout parameters)
-     * may be created using {@link ThreadPoolExecutor} constructors.
-     *
-     * @return the newly created thread pool
-     */
-    public static ExecutorService newCachedThreadPool() {
-        return new ThreadPoolExecutor(0, Integer.MAX_VALUE,
-                                      60L, TimeUnit.SECONDS,
-                                      new SynchronousQueue<Runnable>());
-    }
-    ```
-    - Executors.newScheduledThreadPool()
-        - 核心线程固定，最大线程Inter.Max_Value
-        - 超时时间为0，非核心线程闲置会被立即回收
-        - 适合定时任务，具有周期性的任务
-    ```
-    /**
-     * Creates a new {@code ScheduledThreadPoolExecutor} with the
-     * given core pool size.
-     *
-     * @param corePoolSize the number of threads to keep in the pool, even
-     *        if they are idle, unless {@code allowCoreThreadTimeOut} is set
-     * @throws IllegalArgumentException if {@code corePoolSize < 0}
-     */
-    public ScheduledThreadPoolExecutor(int corePoolSize) {
-        super(corePoolSize, Integer.MAX_VALUE,
-              DEFAULT_KEEPALIVE_MILLIS, MILLISECONDS,
-              new DelayedWorkQueue());
-    }
-    ```
-    - Executor.SingleThreadExecutor()
-        - 只有一个核心线程
-        - 单线程的任务
-    ```
-    /**
-     * Creates an Executor that uses a single worker thread operating
-     * off an unbounded queue. (Note however that if this single
-     * thread terminates due to a failure during execution prior to
-     * shutdown, a new one will take its place if needed to execute
-     * subsequent tasks.)  Tasks are guaranteed to execute
-     * sequentially, and no more than one task will be active at any
-     * given time. Unlike the otherwise equivalent
-     * {@code newFixedThreadPool(1)} the returned executor is
-     * guaranteed not to be reconfigurable to use additional threads.
-     *
-     * @return the newly created single-threaded Executor
-     */
-    public static ExecutorService newSingleThreadExecutor() {
-        return new FinalizableDelegatedExecutorService
-            (new ThreadPoolExecutor(1, 1,
-                                    0L, TimeUnit.MILLISECONDS,
-                                    new LinkedBlockingQueue<Runnable>()));
-    }
-    ```
-- Executors 返回的线程池对象的弊端如下(摘自《阿里巴巴 Android 开发手册》(1.0.0)):
-    - FixedThreadPool 和 SingleThreadPool:允许的请求队列(LinkedBlockingQueue)长度为Integer.MAX_VALUE，可能会堆积大量的请求，从而导致 OOM;   
-    - CachedThreadPool 和 ScheduledThreadPool:允许的创建线程数量为Integer.MAX_VALUE，可能会创建大量的线程，从而导致OOM。
-- 因此不建议使用Executor来构建线程池，而应该用
-ThreadPoolExcutor来够构造线程池；
-```
-int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
-int KEEP_ALIVE_TIME = 1;
-TimeUnit KEEP_ALIVE_TIME_UNIT = TimeUnit.SECONDS; BlockingQueue<Runnable> taskQueue = new LinkedBlockingQueue<Runnable>(); ExecutorService executorService = new ThreadPoolExecutor(NUMBER_OF_CORES, NUMBER_OF_CORES*2, KEEP_ALIVE_TIME, KEEP_ALIVE_TIME_UNIT,
-taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler());
-```
+#### [使用线程池](./optimize/threadpool.md)
+#### [Conrouine](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
+
 # Hybrid
 - Fultter
 - Rn
@@ -510,7 +227,7 @@ taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler())
     - [Flutter 要全平台制霸？我看悬](https://mp.weixin.qq.com/s/VnnhurJ03vEb75uB2PS6Wg)
 
 
-## Apk
+# Apk
 - 签名校验
     - jarsigner -certs -verbose -verify xxx.apk ([apk是否已经签名？](https://blog.csdn.net/qq_36005519/article/details/53519481))
 # 多进程
@@ -520,8 +237,8 @@ taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler())
 - SharedPreferences is not trusted(MMKV is trusted,it is Tencent open resouce project)
 - Application will be crated multiple times. 
 # 组件化
-- CC
-- Aroute
+- [CC](https://github.com/luckybilly/CC)
+- [Aroute](https://github.com/alibaba/ARouter)
     - @Route
     - @Servive
     - @Autowire
@@ -532,27 +249,39 @@ taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler())
 # [Xposed](https://github.com/BryceLee/android-compass/blob/master/design.md)
 # Android Studio
 - [adb#shellcommands](https://developer.android.com/studio/command-line/adb#shellcommands)
+### Old Version
+- 可以去[这里](https://www.androiddevtools.cn/)下载旧版本
+- Mac环境下：
+    - 打开dmg文件，把AndroidStudio移动Applicaiton下，（正常安装布局，本地已经有As会弹出是否覆盖选项，选择keep both）
+    - 默认是AndroidStudio 2，可以自行更名
+    - 我这边选择不导入旧配置，不确定选择旧配置是否会有影响，所查资料也是建议用全新的配置，可以在隐藏文件~Library/Application Support看到新的As版本信息
+# Gralde
+- [Gradle和Plugin对应版本要求](https://developer.android.com/studio/releases/gradle-plugin.html#updating-gradle)
+- Groovy
+- [命令](https://blog.csdn.net/qq402164452/article/details/70207279)
 ### 配置编译
 - 生成APK过程
 ![](https://developer.android.com/images/tools/studio/build-process_2x.png)
 - 合并清单文件
 ![](https://developer.android.com/studio/images/build/manifest-merger_2x.png)
-## App Version Update
+# App Version Update
 - [Bugly](https://bugly.qq.com/docs/introduction/app-upgrade-introduction)
     - [Buyly Summary](https://www.jianshu.com/p/168feeea2363)
-## Test
-### Junit4(local unit test)
+# Test
+## Junit4(local unit test)
 - Junit is the most popular and widely-used unit testing framework for java.
 - a test method begins with the @Test annotation and contains the code to exercise and verify a single functionality in the component that you want to test.
 - if you meet runtimeException--Error: "Method ... not mocked",you should add some configuration,because you run a test that calls an API from the Android SDK that you do not mock.
-    ```
+```
     android {
     // ...
-    testOptions {
+        testOptions {
         unitTests.includeAndroidResources = true
+        }
     }
-}
-    ```
+```
+## [robolectric](https://github.com/robolectric/robolectric)
+## 其他测试资源
 - 【Chinese Blog About Unit Test】（https://www.jianshu.com/p/aa51a3e007e2）
 ## Built-in Test
 - Auto Pack
@@ -564,27 +293,23 @@ taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler())
 - You can upload your apk ,and you get a qrcode that someone can scan and download apk for test it.I think Pgyer is better because it can keep more valid upload apk history.
 - [Pgyer](https://www.pgyer.com/)
 - [Fir](https://fir.im/)
+# 混淆
 ## Proguard
-- Proguard
 - read proguard code
     - proguardgui.sh(android_sdk_path/tools/proguard/bin)
         - 利用Retrace功能，结合mapping还原被混淆的代码
         - Mac在terminal输入proguardgui.sh既可打开工具
-
-## Version Control Tools
+## R8
+# Version Control Tools
 - [Git](https://git-scm.com/book/en/v2)
     - git commit --amend(修改未push的当前本地commit message)
 - [SourceTree](https://www.sourcetreeapp.com/)(A Git UI Client)
 
-## Example
-- https://blog.csdn.net/singwhatiwanna/article/details/49560409
-- https://juejin.im/post/5cc3a7495188252e784498b4
-
-## Debug
+# Debug
 - Charles
     - [Introduce to Charles](https://juejin.im/post/5b4f005ae51d45191c7e534a)
     - Map(When service don't give data,you can custom data)
-
+# Native
 ## JNI
 - 目的
     - 较Java层而言，优化性能，对抗逆向
@@ -616,7 +341,7 @@ taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler())
 - 字节码（英语：Bytecode）通常指的是已经经过编译，但与特定机器代码无关，需要解释器转译后才能成为机器代码的中间代码。字节码通常不像源码一样可以让人阅读，而是编码后的数值常量、引用、指令等构成的序列。
 
 - 字节码主要为了实现特定软件运行和软件环境、与硬件环境无关。字节码的实现方式是通过编译器和虚拟机。编译器将源码编译成字节码，特定平台上的虚拟机将字节码转译为可以直接运行的指令。字节码的典型应用为Java bytecode。
-## Android Native Librarys
+# Android Native Librarys
 ### Bionic
 ## Core Library
 
@@ -626,15 +351,19 @@ taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler())
 - Android中各种服务都注册到Binder中
 ### ASHMem（匿名共享内存）
 - 这是一种允许进程间共享内存的机制
-## Team management
+
+# Team management
 - Tower
 - Trello
 - [jira](https://freshservice.com/compare-it-helpdesks/jira-alternative?utm_source=Google-AdWords&utm_medium=Search-MEnA-UAE(Brand&Comp)&utm_campaign=Search-MEnA-UAE(Brand&Comp)&utm_term=jira&device=c&gclid=CjwKCAjw2cTmBRAVEiwA8YMgzbRLCdCyGwgMtOOp-i3glSCnsBSQGMlxHR5PZoBzlV9htwwFzq-X7xoCR20QAvD_BwE)
 - ClearQuest
 - [Zentao](https://www.zentao.net/)
 
-## 反编译
+# 逆向
 - [Mac下反编译教程][http://www.devio.org/2018/05/08/Android-reverse-engineering-for-mac/]
+# 榜样
+- https://blog.csdn.net/singwhatiwanna/article/details/49560409
+- https://juejin.im/post/5cc3a7495188252e784498b4
 
 # 推荐书单
 ## Linux
@@ -664,18 +393,6 @@ taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler())
 - Inline Hook
 # 架构
 
-## Android Studio
-### Old Version
-- 可以去[这里](https://www.androiddevtools.cn/)下载旧版本
-- Mac环境下：
-    - 打开dmg文件，把AndroidStudio移动Applicaiton下，（正常安装布局，本地已经有As会弹出是否覆盖选项，选择keep both）
-    - 默认是AndroidStudio 2，可以自行更名
-    - 我这边选择不导入旧配置，不确定选择旧配置是否会有影响，所查资料也是建议用全新的配置，可以在隐藏文件~Library/Application Support看到新的As版本信息
-## Gralde
-- [Gradle和Plugin对应版本要求](https://developer.android.com/studio/releases/gradle-plugin.html#updating-gradle)
-- Groovy
-- [命令](https://blog.csdn.net/qq402164452/article/details/70207279)
-
 # Thanks:
 - 《Android开发高手课》（张绍文）
 - 《阿里巴巴 Android 开发手册》(1.0.0)
@@ -693,7 +410,7 @@ taskQueue, new BackgroundThreadFactory(), new DefaultRejectedExecutionHandler())
 [design]:https://github.com/BryceLee/android-compass/blob/master/design.md
 [networkProtocol]:https://github.com/BryceLee/android-compass/blob/master/networkProtocol.md
 [reduce_apk_size]:https://github.com/BryceLee/android-compass/blob/master/optimize/reduce_apk_size.md
-[app_launcher_optimize]:https://github.com/BryceLee/android-compass/blob/master/optimize/app_launcher_optimize.md
+[app_launcher_optimize]:./optimize/app_launcher_optimize.md
 
 [okhttp]:https://github.com/BryceLee/android-compass/blob/master/FramesSourceAnalysis/Okhttp.md
 
