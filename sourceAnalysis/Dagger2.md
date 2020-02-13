@@ -8,17 +8,17 @@ dependencies {
   annotationProcessor 'com.google.dagger:dagger-compiler:2.x'
 }
 ```
-#### 这里举一个电脑实体和零件实体的例子。
-### @Inject&@Module
+# 这里举一个电脑实体和零件实体的例子。
+## @Inject&@Module
 - 在Dagger2的使用中,我们可以选用@Inject或者@Module来构造对象，等于告诉Dagger2，
-“来，等我需要的时候帮我new这个”，用@Inject来标记，需要被构造类的构造器，另一个重要注解是@Component，它就像一条网线，把Dagger2 new的对象，“传送到”到需要被声明的地方。
-- 如果用@Inject构造对象，我们来看下代码：
-```
+“来，等我需要的时候帮我new这个”;另一个重要注解是@Component，它就像一条网线，把Dagger2 new的对象，“传送到”到需要被声明的地方。
+### 如果用@Inject构造对象，我们来看下代码：
+``` java
 import javax.inject.Inject;//@Inject是java提供，并不是Dagger2
 
 public class PartEntity {
 
-  @Inject# 标记需要被构造的对象的构造方法（固定用法）
+  @Inject //标记需要被构造的对象的构造方法（固定用法）
   public PartEntity() {
     System.out.println("PartEntity init");
   }
@@ -28,16 +28,16 @@ public class PartEntity {
   }
 }
 ```
-```
+``` java
 import javax.inject.Inject;
 
 public class ComputerEntity {
 
   @Inject
-  PartEntity partEntity;# 标记需要被赋值的声明 （固定用法）
+  PartEntity partEntity;// 标记需要被赋值的声明 （固定用法）
 
   public ComputerEntity() {
-    # 连接网线，inject(this)完成注入，DaggerComputerComponent.builder().build()完成准备工作，后续源码分析将会提到。
+    // 连接网线，inject(this)完成注入，DaggerComputerComponent.builder().build()完成准备工作，后续源码分析将会提到。
     DaggerComputerComponent.builder().build().inject(this);
   }
 
@@ -47,13 +47,17 @@ public class ComputerEntity {
 
 }
 ```
-### 源码分析：
 - 查看app/build/source/apt/debug/yourpackage(你的包名下)
 
-- @Inject构造对象的局限性：1，无法构造参数(TODO)；2，无法构造那些第三方对象，因为我们无法给它的构造方法加注解。这时候需要用到@Module
+- @Inject构造对象的局限性：1，无法构造参数；2，无法构造那些第三方对象，因为我们无法给它的构造方法加注解。这时候需要用到@Module
+- 对Inject来构造和标记需要注入的对象，示意图：
+TODO..
+### 如果用@Module构造对象，我们来看下代码：
+//TODO
+
 
 ### Dagger2中如果用@Module提供两个同样类型的对象，Dagger2会报错：
-```
+``` java
 @Module
 public class CarModule {
 
@@ -80,12 +84,11 @@ FAILURE: Build failed with an exception.
 
 
 - 我们需要在指定@Provides的地方也指定一个@Named注解和注入@Inject的地方也指定一个@Named,目的在于告诉Dagger2把谁注入到谁的位置。看一下@Named的源代码：
-```
+``` java
 import javax.inject.Named;
 @Named
 ```
-```
-源码：
+``` java
 @Qualifier
 @Documented
 @Retention(RUNTIME)
@@ -96,7 +99,7 @@ public @interface Named {
 }
 ``` 
 - 使用例子：
-```
+``` java
 @Module
 public class CarModule {
 
@@ -137,10 +140,9 @@ public class CarEntity {
 }
 
 ```
-这样问题就解决来。
 
 - 我们也可以自定义@Qualifier注解，
-```
+``` java
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 public @interface QualifierA {
@@ -191,7 +193,7 @@ public class CarEntity {
 }
 ```
 ### 接下来我们来看看源代码，看Dagger2是如何实现帮我们注入对象的：
-- 首先可以肯定的是，对象的创建和对象在哪里赋值都是我们指定的，我们通过@Injector来标记需要赋值的对象。用@Injector或者@Module来提供对象。通过定义接口XComponent来实现把提供的对象注入到需要的地方。在需要注入的地方，常见模块代码如下：
+- 首先可以肯定的是，对象的创建和对象在哪里赋值都是我们指定的，我们通过@Inject来标记需要赋值的对象。用@Inject或者@Module来提供对象。通过定义接口XxComponent来实现把提供的对象注入到需要的地方。在需要注入的地方，常见模块代码如下：
 ```
 DaggerXComponent.Builder.xxModule(new XXModule()).build().inject(this);
 ```
@@ -231,11 +233,11 @@ public interface CarModuleComponent {
 
 ```
 生成的代码是：
-```
+``` java
 public final class DaggerCarModuleComponent implements CarModuleComponent {
     public static final class Builder {
     private CarModule carModule;
-    # 第一，创建Builder实例
+    // 第一，创建Builder实例
     public static Builder builder() {
     return new Builder();
     }
@@ -243,14 +245,14 @@ public final class DaggerCarModuleComponent implements CarModuleComponent {
     public static final class Builder {
     private CarModule carModule;
     private Builder() {}
-    # 第三，我们构造DaggerCarModuleComponent(传入Builder实例)
+    // 第三，我们构造DaggerCarModuleComponent(传入Builder实例)
     public CarModuleComponent build() {
       if (carModule == null) {
         this.carModule = new CarModule();
       }
       return new DaggerCarModuleComponent(this);
     }
-    # 第二，我们通过类内部的Builder的carModule方法把被@Module注解修饰的类的实例传进来 
+    // 第二，我们通过类内部的Builder的carModule方法把被@Module注解修饰的类的实例传进来 
     public Builder carModule(CarModule carModule) {
       this.carModule = Preconditions.checkNotNull(carModule);
       return this;
@@ -264,7 +266,7 @@ public final class DaggerCarModuleComponent implements CarModuleComponent {
 #### 我们再先看DaggerCardModuleComponent()的构造方法，
 
 
-```
+``` java
 private DaggerCarComponent(Builder builder) {
     assert builder != null;
     initialize(builder);
@@ -283,17 +285,17 @@ private DaggerCarComponent(Builder builder) {
 
 - 这时候就涉及到另一个生成类，就是被@Provides标记对象的生成类，这里的参数，就是我们手动传进来的，DaggerXCompent.Builder().xxmodule(new xxModule).build();
 - 注意这个接口：
-```
+``` java
 public interface Factory<T> extends Provider<T> {
 }
 ```
-```
+``` java
 public interface Provider<T> {
     T get();
 }
 
 ```
-```
+``` java
 public final class CarModule_ProvideWheelAFactory implements Factory<WheelEntity> {
   private final CarModule module;
 
@@ -315,7 +317,7 @@ public final class CarModule_ProvideWheelAFactory implements Factory<WheelEntity
 
 ```
 还涉及到需要被注入类的生成类：
-```
+``` java
 public final class CarEntity_Module_MembersInjector implements MembersInjector<CarEntity_Module> {
   private final Provider<WheelModuleEntity> wheelEntityProvider;
 
@@ -344,7 +346,7 @@ public final class CarEntity_Module_MembersInjector implements MembersInjector<C
 }
 ```
 - DaggerCarComponent的initialize()方法中调用了上面的XX_MembersInjector类的create()方法，里面有个重要方法：
-```
+``` java
  @Override
   public void injectMembers(CarEntity_Module instance) {
     if (instance == null) {
@@ -362,7 +364,7 @@ public final class CarEntity_Module_MembersInjector implements MembersInjector<C
   }
 ```
 然后在这里，完成了注入：
-```
+``` java
  @Override
   public void injectMembers(CarEntity_Module instance) {
     if (instance == null) {
@@ -388,7 +390,7 @@ public final class CarEntity_Module_MembersInjector implements MembersInjector<C
    }
 ```
 被修饰的@Lazy的值在同一个实例下，值是相等的。
-```
+``` java
 final class LazyCounter {
       @Inject Lazy<Integer> lazy;
 
@@ -411,7 +413,7 @@ final class LazyCounter {
 ```
 ### @Binds
 可以使用@Binds来简化@Provides 一个接口的对象
-``` 
+``` java
     @Provides
     IRepositoryManager bindRepositoryManager(RepositoryManager repositoryManager){
       return repositoryManager;
@@ -429,6 +431,9 @@ final class LazyCounter {
 - 可以直接为与@Component相关联的@Module中的同类型的成员变量赋值，@Module中就不必要再提供已经被@BindsInstance修饰的变量。
 
 ### @Module是如何工作的呢？
+
+# 推荐阅读
+- [Android单元测试（六）：使用dagger2来做依赖注入，以及在单元测试中的应用](https://chriszou.com/2016/05/10/android-unit-testing-di-dagger.html),虽然是讲单元测试，但是在讲述dagger2概念部分很棒！
 
 # Thanks
 - https://zhuanlan.zhihu.com/p/24454466

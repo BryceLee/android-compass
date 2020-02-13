@@ -62,8 +62,7 @@ Android-Compass is a learning manual about CS basis,Android basis,Android Archit
 ## [Eventbus（基于3.1.1源码）](./sourceAnalysis/Eventbus.md)
 ## [ButterKnife](./sourceAnalysis/ButterKnife.md)
 ## [Dagger2](./sourceAnalysis/Dagger2.md)
-## Rxjava
-- [RxJavaPlugins](https://github.com/ReactiveX/RxJava/blob/2.x/CHANGES.md#version-206---february-15-2017-maven)
+## [Rxjava](./sourceAnalysis/Rxjava.md)
 ## Network
 ### Okhttp
 #### Intercrptors
@@ -100,6 +99,10 @@ OkHttp uses lists to track interceptors, and interceptors are called in order.
     
 # 数据加密
 - [EncriptSharedPreferences](https://developer.android.com/jetpack/androidx/releases/security):provides an implementation of SharedPreferences that automatically encrypts/decrypts all keys and values
+# [Dependency injection]
+- Another approach is to just use the normal Dagger APIs and follow guides such as the one 
+[here](https://developer.android.com/training/dependency-injection/dagger-android). This may be simpler to understand but comes with the downside of having to write extra boilerplate manually
+- The better approach is [here](https://dagger.dev/android) for Android.
 # Optimize
 ## ANR
 - common issues
@@ -281,8 +284,14 @@ https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extensio
     }
 ```
 ## [robolectric](https://github.com/robolectric/robolectric)
+- 上手robolectric填坑推荐阅读: [浅谈测试之
+Robolectric](https://juejin.im/post/5a5c920e6fb9a01cba4290c9)
+## Mockito
+- [推荐阅读：浅谈测试之Mockito](https://juejin.im/post/5acc761ef265da237d035676)
 ## 其他测试资源
 - 【Chinese Blog About Unit Test】（https://www.jianshu.com/p/aa51a3e007e2）
+- dagger2结合单元测试,推荐阅读：[android-unit-testing-di-dagger](https://chriszou.com/2016/05/10/android-unit-testing-di-dagger.html)
+- [Android单元测试(五)：网络接口测试](https://blog.csdn.net/qq_17766199/article/details/78881992)
 ## Built-in Test
 - Auto Pack
     - [Jenkins](https://jenkins.io/doc/)
