@@ -1,5 +1,5 @@
 ## 设计思想
-- 什么是控制反转？
+- 什么是控制反转(Inversion of Control)？
     - 可以这么理解，对象的创建交给一个“仓库”来管理（这里所谓的反转），而不是使用方自行创建（这就是正转）
     - 实现方式：
         - DI(Depency Injection),利用这些思想的库：Dagger2,Spring
@@ -7,7 +7,7 @@
     - Thanks:
         - [IOC1](http://sishuok.com/forum/blogPost/list/2427.html)
         - [IOC2](https://www.cnblogs.com/maxstack/p/7516097.html)
-- AOP
+- AOP(Aspect oriented Programming)
 ## 设计原则
 ![](https://cdn-images-1.medium.com/max/1600/1*ykdDqm06KRI1XDtv34b2BQ.png)
 - 单一职能原则
@@ -60,6 +60,8 @@
 - 访问者
 - 迭代器
 
+###
+- 策略模式（比如可以消除大量if eles）
 
 ## TODO
 - Android一些基类，少用继承，多用接口扩展；比如利用好ActivityLifecycleCallbacks
