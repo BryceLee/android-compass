@@ -1,9 +1,9 @@
 # 线程池
 - Executor(Interface),ThreadPoolExecutor(Impl)
-- 构造参数说明：
-    - coolPoolsize
+- 构造参数说明(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, RejectedExecutionHandler handler)：
+    - corePoolSize
         - 默认情况下一直活着，除非设置ThreadPoolExecutor的allowCoreThreadTimeout=true,核心线程闲置超时也会被终止
-    - maxinumPoolsize
+    - maximumPoolSize
         - 最大线程数，新任务超过最大值就要等待
     - keepAliveTime
         - 线程闲置保活时间
@@ -12,8 +12,10 @@
     - workQueue:任务队列，存储runnable对象
     - ThreadFactory  
         - 创建线程
+    - handler
+        - 拒绝策略
 - 参考AsyncTask参数配置：
-    - coolposize=cpucount+1
+    - corePoolSize=cpucount+1
     - maximumpoolsize=cpucount*2+1
     - 核心线程无超时机制，非核心线程超时时间1秒
     - 任务队列容量128
