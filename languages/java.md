@@ -5,7 +5,7 @@
 ## Thread State:
 ![](https://upload-images.jianshu.io/upload_images/4840092-f85e70e2262b7878.png?imageMogr2/auto-orient/strip|imageView2/2/w/1155)
 ## 同步
-- ![Java同步小结](https://juejin.im/post/5c45c96de51d45263c1d6613)
+- [Java同步小结](https://juejin.im/post/5c45c96de51d45263c1d6613)
 # GC
 - [垃圾回收机制](https://github.com/BryceLee/java-compass/blob/master/README.md#heading-2)
            
