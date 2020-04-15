@@ -99,7 +99,7 @@ OkHttp uses lists to track interceptors, and interceptors are called in order.
     
 # 数据加密
 - [EncriptSharedPreferences](https://developer.android.com/jetpack/androidx/releases/security):provides an implementation of SharedPreferences that automatically encrypts/decrypts all keys and values
-# [Dependency injection]
+# Dependency injection
 - Another approach is to just use the normal Dagger APIs and follow guides such as the one 
 [here](https://developer.android.com/training/dependency-injection/dagger-android). This may be simpler to understand but comes with the downside of having to write extra boilerplate manually
 - The better approach is [here](https://dagger.dev/android) for Android.
