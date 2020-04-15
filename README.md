@@ -208,7 +208,7 @@ https://www.jianshu.com/p/ac00e370f83d
 https://juejin.im/post/5cebc989e51d454f72302482?utm_source=gold_browser_extension#heading-14
 - 在 Application 的业务初始化代码加入进程判断，确保只在自己需要的进程初始化
 #### [使用线程池](./optimize/threadpool.md)
-#### [Conrouine](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
+#### [Coroutines](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
 
 # Hybrid
 - Fultter
