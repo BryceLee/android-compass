@@ -23,7 +23,11 @@ Android-Compass is a learning manual about CS basis,Android basis,Android Archit
     - 并不是必须是四层结构，这里知识为了展示原理，只要遵循这些思想即可。
     - 从外向内的单向依赖。
     - 控制的流程是从外到里再到外的，注意上图右下角。（[对于这一点，如果有疑问你可以看这里](https://five.agency/wp-content/uploads/2016/11/Graph-1-2.png）
-    - Use Cases的出现缓解了Presenter的压力（项目够大的情况下，会发现MVP很麻烦，新增一个V的状态就可能需要多写几个接口，P层接口会很臃肿），上图中的Presenter我们可以自行选用MVC，MVP，MVVM。
+    - Use Cases的出现缓解了Presenter的压力   
+        - 项目够大的情况下，会发现MVP有几个重大缺点
+            - 新增一个V的状态就可能需要多写几个接口，P层接口会很臃肿
+            - View的接口强依赖View的具体类型（变更View不方便）
+    - 上图中的Presenter我们可以自行选用MVC，MVP，MVVM。
     - 关于UseCase的实践:
     ![](https://listenzz.github.io/images/android/graf_1.png)
     - 关于模块，见下图：
