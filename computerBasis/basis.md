@@ -9,4 +9,4 @@
     - 最大堆
     - 二分法
 - [计算机网络相关](https://github.com/BryceLee/android-compass/blob/master/networkProtocol.md)
-- 关于字符编码，你可以读一下这一篇文章：[关于字符编码，你所需要知道的](http://www.imkevinyang.com/2010/06/%E5%85%B3%E4%BA%8E%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%8C%E4%BD%A0%E6%89%80%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84.html)
+- 关于字符编码，你可以读一下这一篇文章：[关于字符编码，你所需要知道的](https://www.cnblogs.com/kevinyang/archive/2010/06/18/1760597.html)
