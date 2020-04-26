@@ -151,7 +151,7 @@ OkHttp uses lists to track interceptors, and interceptors are called in order.
 ### 卡顿查找工具
 - BlockCanary
     - [原理](https://www.jianshu.com/p/e58992439793)
-    - 原理简述，Looper的loop（）会调用handler的dispatchMessage()；如果卡顿，一定是发生在dispatchMessage里，我们就在dispatchMessage（）执行之后设置监听，如果事件差大于16ms就认为是卡顿。dump堆栈和CPU信息就好。
+    - 原理简述，View绘制的时候，总会调用ViewRootImpl的requestlayout(),会看到绘制消息将通过Handler发送。Looper的loop（）会调用handler的dispatchMessage()；如果卡顿，一定是发生在dispatchMessage里，我们就在dispatchMessage（）执行之后设置监听，如果事件差大于16ms就认为是卡顿。dump堆栈和CPU信息就好。
     - 如果BlockCanary日志的信息还是无法分析出原因，建议监听CPU活动情况，比如Profiler的Trace Java Methods,然后可以看Flame Chart，找到和项目代码相关的函数，查看耗时，分析可疑函数即可。
 - Linux命令
 - 图形化工具
