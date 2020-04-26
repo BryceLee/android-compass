@@ -2,7 +2,7 @@
 - [offical docs](https://developer.android.com/topic/performance/reduce-apk-size)
 - APK体积会影响程序加载速度，内存占用，电量消耗
     - APK结构
-        - META-INF，签名相关文件
+        - META-INF（包含了一些签名相关文件）
         - assets
         - lib，不同架构SO库等
         - res
